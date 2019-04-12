@@ -12,7 +12,7 @@ public class Run2 {
             i = 105776
              已经是停止状态!
             end
-             进入 MyThread2.run的catch
+             进入 MyThread.run的catch
              */
         } catch (InterruptedException e) {
             e.printStackTrace();

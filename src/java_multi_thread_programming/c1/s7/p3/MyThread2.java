@@ -14,7 +14,7 @@ public class MyThread2 extends Thread{
             }
             System.out.println("我被输出, 如果此代码是for还会继续运行, 线程并未停止");
         } catch (InterruptedException e) {
-            System.out.println(" 进入 MyThread2.run的catch");
+            System.out.println(" 进入 MyThread.run的catch");
             System.out.println();
         }
     }

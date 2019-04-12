@@ -3,3 +3,39 @@
 1. c -- chapter 章 1
 2. s -- section 节 1.1
 3. p -- part 部分 1.1.1
+
+## [java多线程技能](c1)
+
+1. 概念
+2. [使用多线程](c1\s2)
+    1. 继承`Thread`类
+    2. 实现`Runnable`接口
+    3. 实例变量与线程安全
+    4. i++/i-- 非原子操作
+3. [currentThread()](c1\s3)
+4. [isAlive()](c1\s4)
+5. [sleep()](c1\s5)
+6. [getId()](c1\s6)
+7. [停止线程](c1\s7)
+    - 判断线程是否停止
+        1. `static`this.interrupted() 执行后将状态清除
+        2. this.isInterrupted() 不清除状态
+    - 停止线程的方法
+        1. 异常法
+            1. `interrupt`后抛出`InterruptedException`异常
+            2. sleep中中断会抛出`InterruptedException`异常
+        2. 暴力停止-- `stop()` 
+            1. 会给数据造成不一致的结果, 已被弃用
+        3. 使用return
+8. [暂停线程](c1\s8)
+    1. suspend, resume的使用
+    2. 缺点--独占
+    3. 缺点--不同步
+9. [yield()](c1\s9)
+10. [线程的优先级](c1\s10)
+    1. 线程优先级具有继承性(指线程的继承, 不是面向对象的)
+    2. 线程优先级具有规则性
+    3. 线程优先级具有随机性
+    4. 比比谁快
+11. [守护线程](c1\s11)
+    不存在非守护线程, 守护线程自动销毁

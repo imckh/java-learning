@@ -2,8 +2,6 @@
 
 ## 简单工厂模式
 
-
-
 对象的创建和对象的使用分离开
 
 ### simple_factory_pattern_v1
