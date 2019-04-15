@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config>
+    <className>designpattern.creational_pattern.factory_method_pattern.v3.FileLoggerFactory</className>
+</config>

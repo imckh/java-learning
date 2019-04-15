@@ -13,3 +13,4 @@
 ## [创建型模式](creational_pattern)
 
 ### [简单工厂模式](creational_pattern\simple_factory_pattern)
+### [工厂方法模式](creational_pattern\factory_method_pattern)

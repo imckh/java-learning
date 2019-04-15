@@ -16,7 +16,7 @@ public class XMLUtil {
             DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = dFactory.newDocumentBuilder();
             Document doc;
-            doc = builder.parse(new File("src\\designpattern\\creational_pattern\\v3\\config.xml"));
+            doc = builder.parse(new File("src\\designpattern\\creational_pattern\\simple_factory_pattern\\v3\\config.xml"));
 //获取包含图表类型的文本节点
             NodeList nl = doc.getElementsByTagName("chartType");
             Node classNode = nl.item(0).getFirstChild();
