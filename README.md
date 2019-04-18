@@ -10,11 +10,20 @@
     > 简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的
       实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是
       静态(static)方法，因此简单工厂模式又被称为静态工厂方法(Static Factory Method)模式
-1. [工厂方法模式(Factory Method Pattern)](src/designpattern/creational_pattern/factory_method_pattern/README.md)
+2. [工厂方法模式(Factory Method Pattern)](src/designpattern/creational_pattern/factory_method_pattern/README.md)
     > 定义一个用于创建对象的接口，让子类决定将哪一个
       类实例化。工厂方法模式让一个类的实例化延迟到其子类。工厂方法模式又简称为工厂模式
       (Factory Pattern)，又可称作虚拟构造器模式(Virtual Constructor Pattern)或多态工厂模式
       (Polymorphic Factory Pattern)。工厂方法模式是一种类创建型模式。
+3. [抽象工厂模式-Abstract Factory Pattern](src/designpattern/creational_pattern/abstract_factory_pattern/README.md)
+    > 抽象工厂模式(Abstract Factory Pattern)：提供一个创建一系列相关或相互依赖对象的接口，而
+      无须指定它们具体的类。抽象工厂模式又称为Kit模式，它是一种对象创建型模式。<br>
+      在抽象工厂模式中，每一个具体工厂都提供了多个工厂方法用于产生多种不同类型的产品，
+      这些产品构成了一个产品族
+4. [单例模式-Singleton Pattern](src/designpattern/creational_pattern/singleton_pattern/README.md)
+    > 单例模式(Singleton Pattern)：确保某一个类只有一个实例，
+     而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法。
+     单例模式是一种对象创建型模式。
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
