@@ -15,3 +15,5 @@
 ### [简单工厂模式](creational_pattern\simple_factory_pattern)
 ### [工厂方法模式](creational_pattern\factory_method_pattern)
 ### [抽象工厂模式](creational_pattern\abstract_factory_pattern)
+### [单例模式](creational_pattern\singleton_pattern)
+### [原型模式](creational_pattern\prototype_pattern)
