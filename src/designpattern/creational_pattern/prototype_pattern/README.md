@@ -1,4 +1,4 @@
-# 原型模式-Prototype Pattern
+# 对象的克隆 原型模式-Prototype Pattern
 
 原型模式(Prototype Pattern)：
 

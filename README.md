@@ -27,6 +27,9 @@
 5. [原型模式(Prototype Pattern)](src/designpattern/creational_pattern/prototype_pattern/README.md)
     > 原型模式(Prototype Pattern)：使用原型实例指定创建对象的种类，
      并且通过拷贝这些原型创建新的对象。原型模式是一种对象创建型模式。
+6. [建造者模式(Builder Pattern)](src/designpattern/creational_pattern/builder_pattern/README.md)
+    > 建造者模式(Builder Pattern)：将一个复杂对象的构建与它的表示分离，
+      使得同样的构建过程可以创建不同的表示。建造者模式是一种对象创建型模式。
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
