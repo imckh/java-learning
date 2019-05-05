@@ -46,13 +46,13 @@ class LoggerFactory {
 - Factory（抽象工厂）：在抽象工厂类中，声明了工厂方法(Factory Method)，用于返回一个产品。抽象工厂是工厂方法模式的核心，所有创建对象的工厂类都必须实现该接口。
 - ConcreteFactory（具体工厂）：它是抽象工厂类的子类，实现了抽象工厂中定义的工厂方法，并可由客户端调用，返回一个具体产品类的实例。
 
-## v3
+## [v3](v3)
 `Logger`接口充当抽象产品，其子类`FileLogger`和`DatabaseLogger`充当具体产品，
 `LoggerFactory`接口充当抽象工厂，其子类`FileLoggerFactory`和`DatabaseLoggerFactory`充当具体工厂。
 
 *使用配置文件+反射创建工厂子类*
 
-## v4
+## [v4](v4)
 
 1. 重载的工厂方法
 2. 工厂方法的隐藏

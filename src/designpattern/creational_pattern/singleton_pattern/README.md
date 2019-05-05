@@ -7,20 +7,20 @@
 单例模式有三个要点：一是某个类只能有一个实例；二是它必须自行创建这个实例；三是它
 必须自行向整个系统提供这个实例。
 
-## v0
+## [v0](v0)
 Singleton（单例）：在单例类的内部实现只生成一个实例，同时它提供一个静态的
 getInstance()工厂方法，让客户可以访问它的唯一实例；为了防止在外部对其实例化，将其构
 造函数设计为私有；在单例类内部定义了一个Singleton类型的静态对象，作为外部共享的唯一
 实例。
 
-## v1
+## [v1](v1)
 将负载均衡器LoadBalancer设计为单例类，其中包含一个存储服务器信息的集合serverList，
 每次在serverList中随机选择一台服务器来响应客户端的请求
 
 虽然创建了四个LoadBalancer对象，但是它们实际上是同一个对象，因此，通过使用单例模式
 可以确保LoadBalancer对象的唯一性。
 
-## v2 饿汉式单例与懒汉式单例
+## [v2](v2) 饿汉式单例与懒汉式单例
 
 当第一次调用getLoadBalancer()方法创建并启动负载均衡器时，instance对象为null值，
 因此系统将执行代码instance= new LoadBalancer()，在此过程中，
@@ -30,7 +30,7 @@ getInstance()工厂方法，让客户可以访问它的唯一实例；为了防�
 因此代码instance= new LoadBalancer()将再次执行，导致最终创建了多个instance对象，
 这违背了单例模式的初衷，也导致系统运行发生错误。
 
-## v3 Initialization Demand Holder (IoDH)
+## [v3](v3) Initialization Demand Holder (IoDH)
 
 饿汉式单例类不能实现延迟加载，不管将来用不用始终占据内存；懒汉式单例类线程安全控制烦琐，而且性能受影响。
 

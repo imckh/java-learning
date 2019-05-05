@@ -17,3 +17,4 @@
 ### [抽象工厂模式](creational_pattern\abstract_factory_pattern)
 ### [单例模式](creational_pattern\singleton_pattern)
 ### [原型模式](creational_pattern\prototype_pattern)
+### [建造者模式](creational_pattern\builder_pattern)

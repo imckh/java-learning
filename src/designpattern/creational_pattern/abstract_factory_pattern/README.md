@@ -10,7 +10,7 @@
 在抽象工厂模式中，每一个具体工厂都提供了多个工厂方法用于产生多种不同类型的产品，
 这些产品构成了一个产品族
 
-代码中:
+## [v0](v0) 代码中:
 
 - SkinFactory接口充当抽象工厂，
     - 其子类SpringSkinFactory和SummerSkinFactory充当具体工厂，

@@ -8,19 +8,19 @@
 工厂类中提供一个创建产品的工厂方法，该方法可以根据所传入的参数不同创建不同的具体
 产品对象；客户端只需调用工厂类的工厂方法并传入相应的参数即可得到一个产品对象。
 
-### simple_factory_pattern_v1
+### [simple_factory_pattern_v1](v1)
 
 所有图表的实现代码封装在一个Chart类中
 
 简单工厂模式举例
 
-### simple_factory_pattern_v2
+### [simple_factory_pattern_v2](v2)
 
 将Chart类的职责分离，同时将Chart对象的创建和使用分离
 
 Chart接口充当抽象产品类，其子类HistogramChart、PieChart和LineChart充当具体产品类，ChartFactory充当工厂类
 
-### simple_factory_pattern_v2
+### [simple_factory_pattern_v3](v3)
 
 将静态工厂方法的参数存储在XML或properties格式的配置文件中
 

@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config>
+    <className>designpattern.creational_pattern.builder_pattern.v1.AngelBuilder</className>
+</config>
