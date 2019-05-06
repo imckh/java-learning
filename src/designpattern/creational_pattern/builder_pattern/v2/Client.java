@@ -1,9 +1,11 @@
 package designpattern.creational_pattern.builder_pattern.v2;
 
+import designpattern.util.XMLUtil;
+
 public class Client {
     public static void main(String[] args) {
         ActorBuilder ab; //针对抽象建造者编程
-        ab = (ActorBuilder) XMLUtil.getBean(); //反射生成具体建造者对象
+        ab = (ActorBuilder) XMLUtil.getBean("creational_pattern.builder_pattern.v2"); //反射生成具体建造者对象
         Actor actor;
 
         System.out.println("========================");

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+    <creational_pattern.abstract_factory_pattern.v0>designpattern.creational_pattern.abstract_factory_pattern.v0.SpringSkinFactory</creational_pattern.abstract_factory_pattern.v0>
+    <creational_pattern.builder_pattern.v0>designpattern.creational_pattern.builder_pattern.v0.AngelBuilder</creational_pattern.builder_pattern.v0>
+    <creational_pattern.builder_pattern.v1>designpattern.creational_pattern.builder_pattern.v1.AngelBuilder</creational_pattern.builder_pattern.v1>
+    <creational_pattern.builder_pattern.v2>designpattern.creational_pattern.builder_pattern.v2.DevilBuilder</creational_pattern.builder_pattern.v2>
+    <creational_pattern.factory_method_pattern.v3>designpattern.creational_pattern.factory_method_pattern.v3.FileLoggerFactory</creational_pattern.factory_method_pattern.v3>
+    <creational_pattern.factory_method_pattern.v4>designpattern.creational_pattern.factory_method_pattern.v4.FileLoggerFactory</creational_pattern.factory_method_pattern.v4>
+    <structural_pattern.adapter.v0>designpattern.structural_pattern.adapter.v0.OperationAdapter</structural_pattern.adapter.v0>
+</config>

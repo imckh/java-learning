@@ -4,7 +4,7 @@
 
 [设计模式代码](src/designpattern)
 
-### 创建者模式
+### 创建者模式(Creational Pattern)
 
 1. [简单工厂模式(Simple Factory Pattern)](src/designpattern/creational_pattern/simple_factory_pattern/README.md)
     > 简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的
@@ -30,6 +30,11 @@
 6. [建造者模式(Builder Pattern)](src/designpattern/creational_pattern/builder_pattern/README.md)
     > 建造者模式(Builder Pattern)：将一个复杂对象的构建与它的表示分离，
       使得同样的构建过程可以创建不同的表示。建造者模式是一种对象创建型模式。
+
+### 结构型模式(Structural Pattern)
+1. [适配器模式(Adapter Pattern)](src/designpattern/structural_pattern/adapter/README.md)
+    > 适配器模式(Adapter Pattern)：将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。
+    适配器模式既可以作为类结构型模式，也可以作为对象结构型模式。
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
