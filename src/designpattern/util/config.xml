@@ -7,4 +7,6 @@
     <creational_pattern.factory_method_pattern.v3>designpattern.creational_pattern.factory_method_pattern.v3.FileLoggerFactory</creational_pattern.factory_method_pattern.v3>
     <creational_pattern.factory_method_pattern.v4>designpattern.creational_pattern.factory_method_pattern.v4.FileLoggerFactory</creational_pattern.factory_method_pattern.v4>
     <structural_pattern.adapter.v0>designpattern.structural_pattern.adapter.v0.OperationAdapter</structural_pattern.adapter.v0>
+    <structural_pattern.bridge.v1.image>designpattern.structural_pattern.bridge.v1.JPGImage</structural_pattern.bridge.v1.image>
+    <structural_pattern.bridge.v1.os>designpattern.structural_pattern.bridge.v1.WindowsImp</structural_pattern.bridge.v1.os>
 </config>

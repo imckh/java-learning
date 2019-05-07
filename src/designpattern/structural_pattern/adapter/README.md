@@ -1,4 +1,4 @@
-# 适配器模式-Adapter Pattern
+# 适配器模式-Adapter Pattern 不兼容结构的协调
 
 与电源适配器相似，在适配器模式中引入了一个被称为适配器(Adapter)的包装类，
 而它所包装的对象称为适配者(Adaptee)，即被适配的类。
