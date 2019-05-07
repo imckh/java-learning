@@ -12,6 +12,8 @@
 
 ## [v0](v0) 代码中:
 
+![](abstract_factory_pattern.png)
+
 - SkinFactory接口充当抽象工厂，
     - 其子类SpringSkinFactory和SummerSkinFactory充当具体工厂，
 - 接口Button、TextField和ComboBox充当抽象产品，
