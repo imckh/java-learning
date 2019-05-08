@@ -35,9 +35,12 @@
 1. [适配器模式(Adapter Pattern)](src/designpattern/structural_pattern/adapter/README.md)
     > 适配器模式(Adapter Pattern)：将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。
     适配器模式既可以作为类结构型模式，也可以作为对象结构型模式。
-1. [桥接模式(Bridge Pattern)](src/designpattern/structural_pattern/bridge/README.md)
+2. [桥接模式(Bridge Pattern)](src/designpattern/structural_pattern/bridge/README.md)
     > 将抽象部分与它的实现部分分离，使它们都可以独立地变化。它是一种对象结构型模式，又称为柄体(Handle and Body)模式或接口(Interface)模式。
-
+3. [组合模式(Composite Pattern)](src/designpattern/structural_pattern/composite/README.md)
+    > 组合多个对象形成树形结构以表示具有“整体—部分”关系的层次结构。
+    组合模式对单个对象（即叶子对象）和组合对象（即容器对象）的使用具有一致性，
+    组合模式又可以称为“整体—部分”(Part-Whole)模式，它是一种对象结构型模式。
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
 [java多线程变成核心技术代码](src/java_multi_thread_programming)
