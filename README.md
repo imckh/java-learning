@@ -41,6 +41,10 @@
     > 组合多个对象形成树形结构以表示具有“整体—部分”关系的层次结构。
     组合模式对单个对象（即叶子对象）和组合对象（即容器对象）的使用具有一致性，
     组合模式又可以称为“整体—部分”(Part-Whole)模式，它是一种对象结构型模式。
+4. [装饰模式(Decorator Pattern)](src/designpattern/structural_pattern/decorator/README.md)
+    > 动态地给一个对象增加一些额外的职责，就增加对象功能来说，
+      装饰模式比生成子类实现更为灵活。装饰模式是一种对象结构型模式。
+
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
 [java多线程变成核心技术代码](src/java_multi_thread_programming)
