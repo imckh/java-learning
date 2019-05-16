@@ -75,3 +75,13 @@
     2. 需要生成的产品对象的属性相互依赖，需要指定其生成顺序。
     3. 对象的创建过程独立于创建该对象的类。在建造者模式中通过引入了指挥者类，将创建过程封装在指挥者类中，而不在建造者类和客户类中。
     4. 隔离复杂对象的创建和使用，并使得相同的创建过程可以创建不同的产品。
+ 
+## 使用
+
+- `java.lang.StringBuilder#append()`
+- `java.lang.StringBuffer#append()`
+- `java.nio.ByteBuffer#put() (CharBuffer, ShortBuffer, IntBuffer,LongBuffer, FloatBuffer 和DoubleBuffer与之类似)`
+- `javax.swing.GroupLayout.Group#addComponent()`
+- `java.sql.PreparedStatement`
+- `java.lang.Appendable的所有实现类`
+ 

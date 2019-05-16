@@ -88,9 +88,11 @@ class Adapter implements Target,Adaptee {
 ## 例子
 
 - `java.util.Arrays#asList()`
-- `java.util.Collections#list()`
-- `java.util.Collections#enumeration()`
-- `javax.xml.bind.annotation.adapters.XMLAdapter`
+- `javax.swing.JTable(TableModel)`
+- `java.io.InputStreamReader(InputStream)`
+- `java.io.OutputStreamWriter(OutputStream)`
+- `javax.xml.bind.annotation.adapters.XmlAdapter#marshal()`
+- `javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal()`
 
 ## 总结
 

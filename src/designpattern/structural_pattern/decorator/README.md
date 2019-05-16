@@ -84,3 +84,8 @@ componentBB.display();
 
 - 在JavaIO中的输入流和输出流的设计
 - javax.swing包中一些图形界面构件功能的增强
+- `java.io.BufferedInputStream(InputStream)`
+- `java.io.DataInputStream(InputStream)`
+- `java.io.BufferedOutputStream(OutputStream)`
+- `java.util.zip.ZipOutputStream(OutputStream)`
+- `java.util.Collections#checked[List|Map|Set|SortedSet|SortedMap]()`

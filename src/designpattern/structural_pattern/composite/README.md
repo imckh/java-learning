@@ -144,3 +144,9 @@ class Composite extends Component {
 ## 使用
 
 Java SE中的AWT和Swing包的设计就基于组合模式，在这些界面包中为用户提供了大量的容器构件（如Container）和成员构件（如Checkbox、Button和TextComponent等）
+
+- `javax.swing.JComponent#add(Component)`
+- `java.awt.Container#add(Component)`
+- `java.util.Map#putAll(Map)`
+- `java.util.List#addAll(Collection)`
+- `java.util.Set#addAll(Collection)`

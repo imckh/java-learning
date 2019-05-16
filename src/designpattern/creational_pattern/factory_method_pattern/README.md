@@ -59,3 +59,12 @@ class LoggerFactory {
     > 对客户端隐藏工厂方法，此时，在工厂类中
       将直接调用产品类的业务方法，客户端无须调用工厂方法创建产品，直接通过工厂即可使用
       所创建的对象中的业务方法。
+
+## 使用
+
+- `java.lang.Object#toString() (在其子类中可以覆盖该方法)`
+- `java.lang.Class#newInstance()`
+- `java.lang.Integer#valueOf(String) (Boolean, Byte, Character,Short, Long, Float 和 Double与之类似)`
+- `java.lang.Class#forName()`
+- `java.lang.reflect.Array#newInstance()`
+- `java.lang.reflect.Constructor#newInstance()`
