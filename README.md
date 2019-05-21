@@ -46,6 +46,8 @@
       装饰模式比生成子类实现更为灵活。装饰模式是一种对象结构型模式。
 5. [外观模式(Facade Pattern)](src/designpattern/structural_pattern/facade/README.md)
     > 外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。
+6. [享元模式(Flyweight Pattern)](src/designpattern/structural_pattern/flyweight/README.md)
+    > 享元模式：运用共享技术有效地支持大量细粒度对象的复用。
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
