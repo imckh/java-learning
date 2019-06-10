@@ -29,6 +29,19 @@
 ### [享元模式(Flyweight)](structural_pattern/flyweight)
 ### [代理模式(Proxy)](structural_pattern/proxy)
 
+## 行为型模式(Behavioral Pattern)
+### [职责链模式(Chain of Responsibility Pattern)](behavioral_pattern/chain/README.md)
+### [命令模式(Command Pattern)](behavioral_pattern/command/README.md)
+### [解释器模式(Interpreter Pattern)](behavioral_pattern/interpreter/README.md)
+### [迭代器模式(Iterator Pattern)](behavioral_pattern/iterator/README.md)
+### [中介者模式(Mediator Pattern)](behavioral_pattern/mediator/README.md)
+### [备忘录模式(Memento Pattern)](behavioral_pattern/memento/README.md)
+### [观察者模式(Observer Pattern)](behavioral_pattern/observer/README.md)
+### [状态模式(State Pattern)](behavioral_pattern/state/README.md)
+### [策略模式(Strategy Pattern)](behavioral_pattern/strategy/README.md)
+### [模板方法模式(Template Method Pattern)](behavioral_pattern/template/README.md)
+### [访问者模式(Visitor Pattern)](behavioral_pattern/visitor/README.md)
+
 ## 其他
 
 为了让系统具备良好的灵活性和可扩展性，引入了工具类[XMLUtil](util/XMLUtil.java)和[配置文件](util/config.xml)

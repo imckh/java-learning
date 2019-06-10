@@ -48,8 +48,21 @@
     > 外观模式：为子系统中的一组接口提供一个统一的入口。外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。
 6. [享元模式(Flyweight Pattern)](src/designpattern/structural_pattern/flyweight/README.md)
     > 享元模式：运用共享技术有效地支持大量细粒度对象的复用。
-6. [代理模式(Proxy Pattern)](src/designpattern/structural_pattern/proxy/README.md)
+7. [代理模式(Proxy Pattern)](src/designpattern/structural_pattern/proxy/README.md)
     > 代理模式：给某一个对象提供一个代理或占位符，并由代理对象来控制对原对象的访问。
+
+### 行为型模式(Behavioral Pattern)
+1. [职责链模式(Chain of Responsibility Pattern)](src/designpattern/behavioral_pattern/chain/README.md)
+2. [命令模式(Command Pattern)](src/designpattern/behavioral_pattern/command/README.md)
+3. [解释器模式(Interpreter Pattern)](src/designpattern/behavioral_pattern/interpreter/README.md)
+4. [迭代器模式(Iterator Pattern)](src/designpattern/behavioral_pattern/iterator/README.md)
+5. [中介者模式(Mediator Pattern)](src/designpattern/behavioral_pattern/mediator/README.md)
+6. [备忘录模式(Memento Pattern)](src/designpattern/behavioral_pattern/memento/README.md)
+7. [观察者模式(Observer Pattern)](src/designpattern/behavioral_pattern/observer/README.md)
+8. [状态模式(State Pattern)](src/designpattern/behavioral_pattern/state/README.md)
+9. [策略模式(Strategy Pattern)](src/designpattern/behavioral_pattern/strategy/README.md)
+10. [模板方法模式(Template Method Pattern)](src/designpattern/behavioral_pattern/template/README.md)
+11. [访问者模式(Visitor Pattern)](src/designpattern/behavioral_pattern/visitor/README.md)
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
