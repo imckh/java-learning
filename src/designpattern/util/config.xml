@@ -6,8 +6,12 @@
     <creational_pattern.builder_pattern.v2>designpattern.creational_pattern.builder_pattern.v2.DevilBuilder</creational_pattern.builder_pattern.v2>
     <creational_pattern.factory_method_pattern.v3>designpattern.creational_pattern.factory_method_pattern.v3.FileLoggerFactory</creational_pattern.factory_method_pattern.v3>
     <creational_pattern.factory_method_pattern.v4>designpattern.creational_pattern.factory_method_pattern.v4.FileLoggerFactory</creational_pattern.factory_method_pattern.v4>
+
     <structural_pattern.adapter.v0>designpattern.structural_pattern.adapter.v0.OperationAdapter</structural_pattern.adapter.v0>
     <structural_pattern.bridge.v1.image>designpattern.structural_pattern.bridge.v1.JPGImage</structural_pattern.bridge.v1.image>
     <structural_pattern.bridge.v1.os>designpattern.structural_pattern.bridge.v1.WindowsImp</structural_pattern.bridge.v1.os>
     <structural_pattern.proxy.v1.proxy>designpattern.structural_pattern.proxy.v1.ProxySearcher</structural_pattern.proxy.v1.proxy>
+
+    <behavioral_pattern.command.v1.HelpCommand>designpattern.behavioral_pattern.command.v1.HelpCommand</behavioral_pattern.command.v1.HelpCommand>
+    <behavioral_pattern.command.v1.MinimizeCommand>designpattern.behavioral_pattern.command.v1.MinimizeCommand</behavioral_pattern.command.v1.MinimizeCommand>
 </config>
