@@ -70,19 +70,19 @@
 
 [java多线程变成核心技术代码](src/java_multi_thread_programming)
 
-### [java多线程技能](src\java_multi_thread_programming\c1)
+### [java多线程技能](src/java_multi_thread_programming/c1)
 
 1. 概念
-2. [使用多线程](src\java_multi_thread_programming\c1\s2)
+2. [使用多线程](src/java_multi_thread_programming/c1/s2)
     1. 继承`Thread`类
     2. 实现`Runnable`接口
     3. 实例变量与线程安全
     4. i++/i-- 非原子操作
-3. [currentThread()](src\java_multi_thread_programming\c1\s3)
-4. [isAlive()](src\java_multi_thread_programming\c1\s4)
-5. [sleep()](src\java_multi_thread_programming\c1\s5)
-6. [getId()](src\java_multi_thread_programming\c1\s6)
-7. [停止线程](src\java_multi_thread_programming\c1\s7)
+3. [currentThread()](src/java_multi_thread_programming/c1/s3)
+4. [isAlive()](src/java_multi_thread_programming/c1/s4)
+5. [sleep()](src/java_multi_thread_programming/c1/s5)
+6. [getId()](src/java_multi_thread_programming/c1/s6)
+7. [停止线程](src/java_multi_thread_programming/c1/s7)
     - 判断线程是否停止
         1. `static`this.interrupted() 执行后将状态清除
         2. this.isInterrupted() 不清除状态
@@ -93,17 +93,17 @@
         2. 暴力停止-- `stop()` 
             1. 会给数据造成不一致的结果, 已被弃用
         3. 使用return
-8. [暂停线程](src\java_multi_thread_programming\c1\s8)
+8. [暂停线程](src/java_multi_thread_programming/c1/s8)
     1. suspend, resume的使用
     2. 缺点--独占
     3. 缺点--不同步
-9. [yield()](src\java_multi_thread_programming\c1\s9)
-10. [线程的优先级](src\java_multi_thread_programming\c1\s10)
+9. [yield()](src/java_multi_thread_programming/c1/s9)
+10. [线程的优先级](src/java_multi_thread_programming/c1/s10)
     1. 线程优先级具有继承性(指线程的继承, 不是面向对象的)
     2. 线程优先级具有规则性
     3. 线程优先级具有随机性
     4. 比比谁快
-11. [守护线程](src\java_multi_thread_programming\c1\s11)
+11. [守护线程](src/java_multi_thread_programming/c1/s11)
     不存在非守护线程, 守护线程自动销毁
 
 ## [java核心技术笔记](src/javacore)
