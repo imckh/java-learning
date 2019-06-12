@@ -57,6 +57,7 @@
 2. [命令模式(Command Pattern)](src/designpattern/behavioral_pattern/command/README.md)
     > 将一个请求封装为一个对象，从而让我们可用不同的请求对客户进行参数化；对请求排队或者记录请求日志，以及支持可撤销的操作。
 3. [解释器模式(Interpreter Pattern)](src/designpattern/behavioral_pattern/interpreter/README.md)
+    > 解释器模式(Interpreter Pattern)：定义一个语言的文法，并且建立一个解释器来解释该语言中的句子，这里的“语言”是指使用规定格式和语法的代码。
 4. [迭代器模式(Iterator Pattern)](src/designpattern/behavioral_pattern/iterator/README.md)
 5. [中介者模式(Mediator Pattern)](src/designpattern/behavioral_pattern/mediator/README.md)
 6. [备忘录模式(Memento Pattern)](src/designpattern/behavioral_pattern/memento/README.md)
