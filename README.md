@@ -59,6 +59,7 @@
 3. [解释器模式(Interpreter Pattern)](src/designpattern/behavioral_pattern/interpreter/README.md)
     > 解释器模式(Interpreter Pattern)：定义一个语言的文法，并且建立一个解释器来解释该语言中的句子，这里的“语言”是指使用规定格式和语法的代码。
 4. [迭代器模式(Iterator Pattern)](src/designpattern/behavioral_pattern/iterator/README.md)
+    > 提供一种方法来访问聚合对象，而不用暴露这个对象的内部表示，其别名为游标(Cursor)。
 5. [中介者模式(Mediator Pattern)](src/designpattern/behavioral_pattern/mediator/README.md)
 6. [备忘录模式(Memento Pattern)](src/designpattern/behavioral_pattern/memento/README.md)
 7. [观察者模式(Observer Pattern)](src/designpattern/behavioral_pattern/observer/README.md)
