@@ -196,6 +196,10 @@ public interface Iterator<E> {
 
 ![关系图](v3-List有关的类及它们之间的关系.png)
 
+- `class ListItr extends Itr implements ListIterator<E>`
+- `class Itr implements Iterator<E>`
+- `interface ListIterator<E> extends Iterator<E>`
+
 在Java中，我们可以直接使用JDK内置的迭代器来遍历聚合对象中的元素：
 ```java
 import java.util.*;
