@@ -61,6 +61,8 @@
 4. [迭代器模式(Iterator Pattern)](src/designpattern/behavioral_pattern/iterator/README.md)
     > 提供一种方法来访问聚合对象，而不用暴露这个对象的内部表示，其别名为游标(Cursor)。
 5. [中介者模式(Mediator Pattern)](src/designpattern/behavioral_pattern/mediator/README.md)
+    > 用一个中介对象（中介者）来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，
+    而且可以独立地改变它们之间的交互。
 6. [备忘录模式(Memento Pattern)](src/designpattern/behavioral_pattern/memento/README.md)
 7. [观察者模式(Observer Pattern)](src/designpattern/behavioral_pattern/observer/README.md)
 8. [状态模式(State Pattern)](src/designpattern/behavioral_pattern/state/README.md)
