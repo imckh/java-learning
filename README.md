@@ -64,7 +64,9 @@
     > 用一个中介对象（中介者）来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，
     而且可以独立地改变它们之间的交互。
 6. [备忘录模式(Memento Pattern)](src/designpattern/behavioral_pattern/memento/README.md)
+    > 在不破坏封装的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态，这样可以在以后将对象恢复到原先保存的状态。
 7. [观察者模式(Observer Pattern)](src/designpattern/behavioral_pattern/observer/README.md)
+    > 定义对象之间的一种一对多依赖关系，使得每当一个对象状态发生改变时，其相关依赖对象皆得到通知并被自动更新。
 8. [状态模式(State Pattern)](src/designpattern/behavioral_pattern/state/README.md)
 9. [策略模式(Strategy Pattern)](src/designpattern/behavioral_pattern/strategy/README.md)
 10. [模板方法模式(Template Method Pattern)](src/designpattern/behavioral_pattern/template/README.md)
