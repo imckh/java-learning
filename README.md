@@ -68,6 +68,7 @@
 7. [观察者模式(Observer Pattern)](src/designpattern/behavioral_pattern/observer/README.md)
     > 定义对象之间的一种一对多依赖关系，使得每当一个对象状态发生改变时，其相关依赖对象皆得到通知并被自动更新。
 8. [状态模式(State Pattern)](src/designpattern/behavioral_pattern/state/README.md)
+    > 允许一个对象在其内部状态改变时改变它的行为，对象看起来似乎修改了它的类。
 9. [策略模式(Strategy Pattern)](src/designpattern/behavioral_pattern/strategy/README.md)
 10. [模板方法模式(Template Method Pattern)](src/designpattern/behavioral_pattern/template/README.md)
 11. [访问者模式(Visitor Pattern)](src/designpattern/behavioral_pattern/visitor/README.md)
