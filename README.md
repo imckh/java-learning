@@ -70,6 +70,7 @@
 8. [状态模式(State Pattern)](src/designpattern/behavioral_pattern/state/README.md)
     > 允许一个对象在其内部状态改变时改变它的行为，对象看起来似乎修改了它的类。
 9. [策略模式(Strategy Pattern)](src/designpattern/behavioral_pattern/strategy/README.md)
+    > 定义一系列算法类，将每一个算法封装起来，并让它们可以相互替换，策略模式让算法独立于使用它的客户而变化，也称为政策模式(Policy)。
 10. [模板方法模式(Template Method Pattern)](src/designpattern/behavioral_pattern/template/README.md)
 11. [访问者模式(Visitor Pattern)](src/designpattern/behavioral_pattern/visitor/README.md)
 

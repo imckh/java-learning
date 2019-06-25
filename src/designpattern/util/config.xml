@@ -14,4 +14,5 @@
 
     <behavioral_pattern.command.v1.HelpCommand>designpattern.behavioral_pattern.command.v1.HelpCommand</behavioral_pattern.command.v1.HelpCommand>
     <behavioral_pattern.command.v1.MinimizeCommand>designpattern.behavioral_pattern.command.v1.MinimizeCommand</behavioral_pattern.command.v1.MinimizeCommand>
+    <designpattern.behavioral_pattern.strategy.v2.Discount>designpattern.behavioral_pattern.strategy.v2.StudentDiscount</designpattern.behavioral_pattern.strategy.v2.Discount>
 </config>
