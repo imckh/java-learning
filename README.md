@@ -72,7 +72,9 @@
 9. [策略模式(Strategy Pattern)](src/designpattern/behavioral_pattern/strategy/README.md)
     > 定义一系列算法类，将每一个算法封装起来，并让它们可以相互替换，策略模式让算法独立于使用它的客户而变化，也称为政策模式(Policy)。
 10. [模板方法模式(Template Method Pattern)](src/designpattern/behavioral_pattern/template/README.md)
+    > 定义一个操作中算法的框架，而将一些步骤延迟到子类中。模板方法模式使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
 11. [访问者模式(Visitor Pattern)](src/designpattern/behavioral_pattern/visitor/README.md)
+    > 提供一个作用于某对象结构中的各元素的操作表示，它使我们可以在不改变各元素的类的前提下定义作用于这些元素的新操作。
 
 ## [java多线程变成核心技术笔记](src/java_multi_thread_programming/README.md)
 
