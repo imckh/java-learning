@@ -1,4 +1,4 @@
-# 数据结构树
+# 查找
 
 [数据结构图形化](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 [visualgo](https://visualgo.net/zh)
@@ -271,13 +271,49 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
 ### 二叉查找树 Binary Search Tree
 
+一个典型的二叉树
+
+![treesample](btreesample.png)
+
+1. 查找（与二分查找几乎一致）
+    1. 如果树是空的，查找未命中。对于未命中的查找，终点是空节点。
+    2. 被查找的键和根节点的键相同，查找命中
+    3. 递归地在子树中查找
+        - 被查找的键较小则选择左子树
+        - 较大选择右子树
+    4. 最好、平均、最坏情况 ![BSTpossibilities](BSTpossibilities.png)
+2. 插入（和查找类似）
+    1. 树是空的，返回含有该键值的新结点
+    2. 被查找的键小于根节点的键，在左子树中插入该键，否则在右边
+    3. 随机插入的情况 ![insert-key-random-order.gif](insert-key-random-order.gif)
+3. 得到树的最小值
+    1. 相当于得到结点的最左子结点
+    2. 递归得到左子节点直到左子节点的左子树为空
+3. 删除
+    1. 删除最大最小值
+        - 最小：深入根节点的左子节点直到遇到空连接，然后将指向该节点的链接指向该节点的右子树
+        - 删除最大是删除最小的相反操作
+    2. 删除： 删除结点x后用它的后继结点代替（其右子树的最小结点）
+        > 最早由 T. Hibbard 在1962年解决了这个难题
+    3. 随机插入删除 ![insert-delete-key-random.gif](insert-delete-key-random.gif)
+4. 实际上在结点的选择上是随机的，但是在经历足够长的时间插入删除后最终会变为N的时间复杂度
+
+#### 例子
+
 - 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
     1. 创建/插入
         - ![put](random-put-btree.gif)
-    2. 从随机序列中删除 `5,14,90,69,41`
-        - ![delete](delete-from-random.gif)
-    3. 查找 `10,33,56,55`
+    2. 查找 `10,33,56,55`
         - ![search](search-from-random.gif)
+    3. 得到最大最小值
+        - ![bst-get-max.gif](bst-get-max.gif)
+        - ![bst-get-min.gif](bst-get-min.gif)
+    4. 删除最小
+        - ![deletemin](bst-delete-min.gif)
+    5. 删除 41
+        - ![delete](bst-delete.gif)
+    6. 从随机序列中删除 `5,14,90,69,41`
+        - ![delete](delete-from-random.gif)
 - 顺序序列
     1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
         - ![put](sequential-put-btree.gif)
@@ -287,22 +323,180 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
         - ![search](sequential-search-btree.gif)
     4. 相当于链表
 
-### 平衡二叉查找树 AVL Trees (Balanced binary search trees)
+#### 实现
 
-- 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
-    1. 创建/插入
-        - ![put](AVL_random-put.gif)
-    2. 从随机序列中删除 `5,14,90,69,41`
-        - ![delete](AVL_delete-from-random.gif)
-    3. 查找 `10,33,56,55`
-        - ![search](AVL_search-from-random.gif)
-- 顺序序列
-    1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
-        - ![put](AVL_sequential-put.gif)
-    2. 从顺序序列中删除 `10, 5, 1`
-        - ![delete](AVL_sequential-delete.gif)
-    3. 查找 相当于线性查找 `5, 11`
-        - ![search](AVL_sequential-search.gif)
+```java
+public class BST<Key extends Comparable<Key>, Value> {
+    private Node root;             // 根节点
+
+    private class Node {
+        private Key key;           // key排序
+        private Value val;         // 数据
+        private Node left, right;  // 左右子树
+        private int size;          // 孩子的个数
+
+        public Node(Key key, Value val, int size) {
+            this.key = key;
+            this.val = val;
+            this.size = size;
+        }
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    public int size() {
+        return size(root);
+    }
+
+    private int size(Node x) {
+        if (x == null) return 0;
+        else return x.size;
+    }
+
+    public boolean contains(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to contains() is null");
+        return get(key) != null;
+    }
+
+    public Value get(Key key) {
+        return get(root, key);
+    }
+
+    // 和二分查找类似
+    private Value get(Node x, Key key) {
+        if (key == null) throw new IllegalArgumentException("called get() with a null key");
+        if (x == null) return null;
+        int cmp = key.compareTo(x.key);
+        if      (cmp < 0) return get(x.left, key);
+        else if (cmp > 0) return get(x.right, key);
+        else              return x.val;
+    }
+
+    public void put(Key key, Value val) {
+        if (key == null) throw new IllegalArgumentException("calledput() with a null key");
+        if (val == null) {
+            delete(key);
+            return;
+        }
+        root = put(root, key, val);
+        assert check();
+    }
+
+    // 插入
+    private Node put(Node x, Key key, Value val) {
+        if (x == null) return new Node(key, val, 1); // 空节点直接新建
+        int cmp = key.compareTo(x.key); // 大的往右，小的往左
+        if      (cmp < 0) x.left  = put(x.left,  key, val);
+        else if (cmp > 0) x.right = put(x.right, key, val);
+        else              x.val   = val;
+        x.size = 1 + size(x.left) + size(x.right); // 更新size
+        return x;
+    }
+
+    public void deleteMin() {
+        if (isEmpty()) throw new NoSuchElementException("Symbol table underflow");
+        root = deleteMin(root);
+    }
+
+    // 深入根节点的左子节点直到遇到空连接，然后将指向该节点的链接指向该节点的右子树
+    // 返回删除后的头结点
+    private Node deleteMin(Node x) {
+        if (x.left == null) return x.right;
+        x.left = deleteMin(x.left); 
+        x.size = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public void deleteMax() {
+        if (isEmpty()) throw new NoSuchElementException("Symbol table underflow");
+        root = deleteMax(root);
+    }
+
+    private Node deleteMax(Node x) {
+        if (x.right == null) return x.left;
+        x.right = deleteMax(x.right);
+        x.size = size(x.left) + size(x.right) + 1;
+        return x;
+
+    public void delete(Key key) {
+        if (key == null) throw new IllegalArgumentException("called delete() with a null key");
+        root = delete(root, key);
+    }
+
+    private Node delete(Node x, Key key) {
+        if (x == null) return null;
+
+        int cmp = key.compareTo(x.key); // 从左右子树中找到结点
+        if      (cmp < 0) x.left  = delete(x.left,  key);
+        else if (cmp > 0) x.right = delete(x.right, key);
+        else { // 删除结点x后，用其右子树的最小结点代替
+            if (x.right == null) return x.left;
+            if (x.left  == null) return x.right;
+            Node t = x;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
+        } 
+        x.size = size(x.left) + size(x.right) + 1;
+        return x;
+    } 
+
+    public Key min() {
+        if (isEmpty()) throw new NoSuchElementException("called min() with empty symbol table");
+        return min(root).key;
+    } 
+
+    private Node min(Node x) { 
+        if (x.left == null) return x; 
+        else                return min(x.left); 
+    } 
+
+    public Key max() {
+        if (isEmpty()) throw new NoSuchElementException("called max() with empty symbol table");
+        return max(root).key;
+    } 
+
+    private Node max(Node x) {
+        if (x.right == null) return x; 
+        else                 return max(x.right); 
+    }
+
+    public int rank(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to rank() is null");
+        return rank(key, root);
+    } 
+
+    // 比key小的数量
+    private int rank(Key key, Node x) {
+        if (x == null) return 0; 
+        int cmp = key.compareTo(x.key); 
+        if      (cmp < 0) return rank(key, x.left); 
+        else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right); // key在右子树中：左子树的size + 1（跟结点）+ key在以右孩子为跟的树中的rank
+        else              return size(x.left); 
+    } 
+
+    public int height() {
+        return height(root);
+    }
+    private int height(Node x) { // 树的高度
+        if (x == null) return -1;
+        return 1 + Math.max(height(x.left), height(x.right));
+    }
+}
+```
+
+#### 二叉查找树的性能
+
+|数据结构|查找(最坏)|插入(最坏)|查找(平均)|插入(平均)|
+| :--- | :--: | :--: | :--: | :--: |
+|顺序查找 无序链表| N | N | N/2 | N |
+|二分查找 有序数组| lgN | 2N | lgN | N |
+|二叉查找树| N | N | 1.39lgN | 1.39lgN |
+
+
+## 平衡查找树 (Balanced search trees)
 
 ### 2-3 查找树
 
@@ -344,3 +538,21 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
 
 ## 散列表
+
+
+## ~~平衡查找树 AVL Trees (Balanced binary search trees)~~
+
+- 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
+    1. 创建/插入
+        - ![put](AVL_random-put.gif)
+    2. 从随机序列中删除 `5,14,90,69,41`
+        - ![delete](AVL_delete-from-random.gif)
+    3. 查找 `10,33,56,55`
+        - ![search](AVL_search-from-random.gif)
+- 顺序序列
+    1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
+        - ![put](AVL_sequential-put.gif)
+    2. 从顺序序列中删除 `10, 5, 1`
+        - ![delete](AVL_sequential-delete.gif)
+    3. 查找 相当于线性查找 `5, 11`
+        - ![search](AVL_sequential-search.gif)
