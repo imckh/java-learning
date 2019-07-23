@@ -267,13 +267,46 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 |二分查找 有序数组| lgN | 2N | lgN | N |
 
 
-## 二叉查找树
+## 查找树
 
-## 平衡二叉查找树
+### 二叉查找树 Binary Search Tree
+
+- 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
+    1. 创建/插入
+        - ![put](random-put-btree.gif)
+    2. 从随机序列中删除 `5,14,90,69,41`
+        - ![delete](delete-from-random.gif)
+    3. 查找 `10,33,56,55`
+        - ![search](search-from-random.gif)
+- 顺序序列
+    1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
+        - ![put](sequential-put-btree.gif)
+    2. 从顺序序列中删除 `10, 5, 1`
+        - ![delete](sequential-delete-btree.gif)
+    3. 查找 相当于线性查找 `5, 11`
+        - ![search](sequential-search-btree.gif)
+    4. 相当于链表
+
+### 平衡二叉查找树 AVL Trees (Balanced binary search trees)
+
+- 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
+    1. 创建/插入
+        - ![put](AVL_random-put.gif)
+    2. 从随机序列中删除 `5,14,90,69,41`
+        - ![delete](AVL_delete-from-random.gif)
+    3. 查找 `10,33,56,55`
+        - ![search](AVL_search-from-random.gif)
+- 顺序序列
+    1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
+        - ![put](AVL_sequential-put.gif)
+    2. 从顺序序列中删除 `10, 5, 1`
+        - ![delete](AVL_sequential-delete.gif)
+    3. 查找 相当于线性查找 `5, 11`
+        - ![search](AVL_sequential-search.gif)
 
 ### 2-3 查找树
 
-### 红黑树
+### 红黑树 Red-Black Trees
 
 ### 总结
 
