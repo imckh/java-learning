@@ -500,7 +500,62 @@ public class BST<Key extends Comparable<Key>, Value> {
 
 ### 2-3 查找树
 
-### 红黑树 Red-Black Trees
+2–3树由约翰·霍普克洛夫特于1970年发明
+![2-3-tree-created-by.png](2-3-tree-created-by.png)
+
+2-3的操作，将临时的4节点分裂成2-3节点
+![Splitting a temporary 4-node in a 2-3 tree (summary)](Splitting-temporary-4-node-in-a-2-3-tree.png)
+
+使用随机值构造的2-3数
+![Typical-23-tree-random-keys.png](Typical-23-tree-random-keys.png)
+
+插入数据 `[3, 1, 5, 4, 2, 9, 10, 8, 7, 6]`
+![2-3-tree-insertion-random.gif](2-3-tree-insertion-random.gif)
+
+### 红黑树 Red-Black Trees --> 左倾红黑树
+
+它在1972年由鲁道夫·贝尔发明，被称为"对称二叉B树"，它现代的名字源于 Leo J. Guibas 和 Robert Sedgewick 于1978年写的一篇论文。Robert Sedgewick在2008年的论文[Left-leaning Red-Black Trees](http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf)中将设计出左倾红黑树，它红黑树的变体，并保证对操作相同渐近的复杂性，但被设计成更容易实现。
+![Robert Sedgewick](Robert-Sedgewick.png)
+
+红黑树将红色的水平就是23数
+![red-black-tree-horizontal-red-links-is-2-3-tree.png](red-black-tree-horizontal-red-links-is-2-3-tree.png)
+
+红黑树的三种操作及代码
+![red-black-tree-3-operations.png](red-black-tree-3-operations.png)
+
+红黑树三种操作间的转换
+![3-operations-turn.png](3-operations-turn.png)
+
+插入255个随机数
+![Insert 255 keys in a red-black BST in random order](Insert-red-blackBST-random-order.gif)
+
+插入255个升序的数
+![Insert 255 keys in a red-black BST in ascending order](Insert-red-blackBST-ascending-order.gif)
+
+插入255个降序的数
+![Insert 255 keys in a red-black BST in descending order](Insert-red-blackBST-descending-order.gif)
+
+### 删除
+
+删除策略（适用于2-3和2-3-4树）
+- 不变：当前节点不是2节点
+- 必要时引入4节点
+- 从最底部删除key（叶子节点）
+- 在向上走的途中消除4节点
+
+#### 删除最大
+
+删除最大
+![delete](deleteMax23.gif)
+
+#### 删除最小
+
+删除最小
+![delete](deleteMin23.gif)
+
+#### 随机删除
+随机删除
+![delete](deleteRandom23.gif)
 
 ### 总结
 
