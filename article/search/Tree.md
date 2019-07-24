@@ -586,7 +586,11 @@ private boolean isRed(Node x) {
 
 #### 插入
 
-
+##### 向树底的2结点插入新键（树只含有一个2结点）
+##### 向一个3结点插入新键（树只含有一个3结点）
+##### 颜色转换 flip colors
+##### 向树底部的3结点插入新键
+##### 将红链在树中向上传递
 
 红黑树三种操作间的转换
 ![3-operations-turn.png](3-operations-turn.png)
@@ -622,7 +626,7 @@ private boolean isRed(Node x) {
 随机删除
 ![delete](deleteRandom23.gif)
 
-#### 代码
+#### 实现
 
 ```java
 public class RedBlackBST<Key extends Comparable<Key>, Value> {
@@ -868,38 +872,45 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     //h的两个自连接颜色相同且到h的颜色与子链接颜色不同
+    // 注意：
+    // 这里的flipColors方法会补全三条链的颜色，而不是实现插入操作时实现的flipColors方法
+    // 对于删除，将父节点设为黑而将两个子节点都设为红
     private void flipColors(Node h) {
         h.color = !h.color;
         h.left.color = !h.left.color;
         h.right.color = !h.right.color;
     }
 
-    // 
+    // 假设h为红色，h.left和h.left.left都是黑色
+    // 将h.left或h.left的子节点之一变为红色
     private Node moveRedLeft(Node h) {
         // assert (h != null);
         // assert isRed(h) && !isRed(h.left) && !isRed(h.left.left);
 
         flipColors(h);
         if (isRed(h.right.left)) { 
-            h.right = rotateRight(h.right); 
-            h = rotateLeft(h); // 
+            h.right = rotateRight(h.right);
+            h = rotateLeft(h);
             flipColors(h);
         }
         return h;
     }
 
+    // 假设h为红色，h.right和h.right.left都是黑色
+    // 将h.right或h.right的子节点之一变为红色
     private Node moveRedRight(Node h) {
         // assert (h != null);
         // assert isRed(h) && !isRed(h.right) && !isRed(h.right.left);
         flipColors(h);
         if (isRed(h.left.left)) { 
-            h = rotateRight(h); // 右旋
-            flipColors(h); // 变色
+            h = rotateRight(h);
+            flipColors(h);
         }
         return h;
     }
 
     // restore red-black tree invariant
+    // 该方法由put方法中的最后一部分构成
     private Node balance(Node h) {
         // assert (h != null);
 
