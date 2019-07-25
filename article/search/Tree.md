@@ -1,15 +1,28 @@
+---
+html:
+  embed_local_images: true
+  embed_svg: true
+  offline: false
+  toc: true
+
+print_background: false
+# 使用 vscode 插件 markdown-preview-enhanced 生成html
+---
+
 # 查找
+
+[TOC]
 
 [数据结构图形化](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 [visualgo](https://visualgo.net/zh)
 
-|数据结构|优点|缺点|
-| -- |-- | -- |
-|顺序查找 无序链表| 小型问题 | 数量多的情况下很慢 |
-|二分查找 有序数组| 查找效率高，空间占用 | 插入操作慢(resize) |
-|二叉查找树| 实现简单 | 性能最坏可能很大，链接需要额外空间 |
-|平衡二叉树查找树(红黑树)| 最优的查找插入效率 | 链接需要额外空间 |
-|散列表 Hash| 快速查找插入 | 需要计算数据的hash，无法进行有序性(排序之类)操作，链接需要额外空间 |
+| 数据结构                 | 优点                 | 缺点                                                               |
+| ------------------------ | -------------------- | ------------------------------------------------------------------ |
+| 顺序查找 无序链表        | 小型问题             | 数量多的情况下很慢                                                 |
+| 二分查找 有序数组        | 查找效率高，空间占用 | 插入操作慢(resize)                                                 |
+| 二叉查找树               | 实现简单             | 性能最坏可能很大，链接需要额外空间                                 |
+| 平衡二叉树查找树(红黑树) | 最优的查找插入效率   | 链接需要额外空间                                                   |
+| 散列表 Hash              | 快速查找插入         | 需要计算数据的hash，无法进行有序性(排序之类)操作，链接需要额外空间 |
 
 ## 符号表
 
@@ -261,10 +274,11 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
 一般情况下二分是比顺序查找要快的。但是二分没法做到高效插入(删除)。
 
-|数据结构|查找(最坏)|插入(最坏)|查找(平均)|插入(平均)|
-| -- |-- | -- | -- | -- |
-|顺序查找 无序链表| N | N | N/2 | N |
-|二分查找 有序数组| lgN | 2N | lgN | N |
+| 数据结构          |    >     | 最坏情况 |    >     | 平均情况 |
+| :---------------- | :------: | :------: | :------: | :------: |
+|                   | **查找** | **插入** | **查找** | **插入** |
+| 顺序查找 无序链表 |    N     |    N     |   N/2    |    N     |
+| 二分查找 有序数组 |   lgN    |    2N    |   lgN    |    N     |
 
 
 ## 查找树
@@ -489,11 +503,12 @@ public class BST<Key extends Comparable<Key>, Value> {
 
 #### 二叉查找树的性能
 
-|数据结构|查找(最坏)|插入(最坏)|查找(平均)|插入(平均)|
-| :--- | :--: | :--: | :--: | :--: |
-|顺序查找 无序链表| N | N | N/2 | N |
-|二分查找 有序数组| lgN | 2N | lgN | N |
-|二叉查找树| N | N | 1.39lgN | 1.39lgN |
+| 数据结构          |    >     | 最坏情况 |    >     | 平均情况 |
+| :---------------- | :------: | :------: | :------: | :------: |
+|                   | **查找** | **插入** | **查找** | **插入** |
+| 顺序查找 无序链表 |    N     |    N     |   N/2    |    N     |
+| 二分查找 有序数组 |   lgN    |    2N    |   lgN    |    N     |
+| 二叉查找树        |    N     |    N     | 1.39lgN  | 1.39lgN  |
 
 
 ## 平衡查找树 (Balanced search trees)
@@ -574,26 +589,69 @@ private boolean isRed(Node x) {
 }
 ```
 
-#### 旋转
+#### 三种基本操作
 
-将红色的右链接转换为左链接叫左旋。
+将红色的右链接转换为左链接叫左旋。rotate-left
 ![rotate-left-anim.gif](rotate-left-anim.gif)
-将红色的左链接转换为右链接叫右旋。
+
+将红色的左链接转换为右链接叫右旋。rotate-right
 ![rotate-right-anim.gif](rotate-right-anim.gif)
+
+变色 flip colors
+![splitting-a-4-node-flip-colors.png](splitting-a-4-node-flip-colors.png)
 
 红黑树的三种操作及代码
 ![red-black-tree-3-operations.png](red-black-tree-3-operations.png)
 
 #### 插入
 
+1. 像二叉查找树一样添加新节点，使用红链接 链接父节点
+2. 如有必要，需要旋转以获得正确的3节点或4节点
+
 ##### 向树底的2结点插入新键（树只含有一个2结点）
+
+![Insert-into-a-single-2-node.png](Insert-into-a-single-2-node.png)
+两种情况：左、右。
+
+因为在红黑树定义了红链接均为左链接，所以如果是向右插入需要左旋
+
 ##### 向一个3结点插入新键（树只含有一个3结点）
-##### 颜色转换 flip colors
-##### 向树底部的3结点插入新键
+
+![Insert-node-into-a-3-node.png](Insert-node-into-a-3-node.png)
+
+3结点有三种情况：左中右
+
+##### 分裂一个4结点
+
+颜色转换 flip colors
+![splitting-a-4-node-flip-colors.png](splitting-a-4-node-flip-colors.png)
+
+##### 向树底部的3结点插入新键（相当于在树底分裂一个4结点）
+
+2种情况：父节点是一个2结点或者父节点是一个3结点
+
+1. 父节点是一个2结点
+   1. 4结点在父节点左边
+        ![splitting-4-node-Parent-2-node-left](splitting-4-node-Parent-2-node-left.png)
+   2. 4结点在父节点右边
+        ![splitting-4-node-Parent-2-node-right](splitting-4-node-Parent-2-node-right.png)
+2. 父节点是一个3结点
+   1. 4结点在父节点左边
+        ![splitting-4-node-Parent-3-node-left](splitting-4-node-Parent-3-node-left.png)
+   2. 4结点在父节点中间
+        ![splitting-4-node-Parent-3-node-middle](splitting-4-node-Parent-3-node-middle.png)
+   4. 4结点在父节点右边
+        ![splitting-4-node-Parent-3-node-right](splitting-4-node-Parent-3-node-right.png)
+
 ##### 将红链在树中向上传递
+
+- [ ] 补充为什么需要向上传递
 
 红黑树三种操作间的转换
 ![3-operations-turn.png](3-operations-turn.png)
+
+##### [插入例子](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
+
 
 插入255个随机数
 ![Insert 255 keys in a red-black BST in random order](Insert-red-blackBST-random-order.gif)
@@ -603,6 +661,31 @@ private boolean isRed(Node x) {
 
 插入255个降序的数
 ![Insert 255 keys in a red-black BST in descending order](Insert-red-blackBST-descending-order.gif)
+
+##### 插入实现
+
+```java
+public void put(Key key, Value val) { 
+    root = put(root, key, val);
+    root.color = BLACK;
+}
+private Node put(Node h, Key key, Value val) {
+    if (h == null) // Do standard insert, with red link to parent.
+        return new Node(key, val, 1, RED);
+
+    int cmp = key.compareTo(h.key);
+    if (cmp < 0)        h.left = put(h.left, key, val);
+    else if (cmp > 0)   h.right = put(h.right, key, val);
+    else                h.val = val; // key存在则更新值
+
+    if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h); // 右红左旋
+    if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h); // 左两个子节点都红 右旋（右旋后变色）
+    if (isRed(h.left) && isRed(h.right)) flipColors(h); // 左右都红变色
+
+    h.N = size(h.left) + size(h.right) + 1;
+    return h;
+}
+```
 
 ### 删除
 
@@ -971,12 +1054,13 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 
 ### 总结
 
-|数据结构|查找(最坏)|插入(最坏)|查找(平均)|插入(平均)|
-| :--- | :--: | :--: | :--: | :--: |
-|顺序查找 无序链表| N | N | N/2 | N |
-|二分查找 有序数组| lgN | 2N | lgN | N |
-|二叉查找树| N | N | 1.39lgN | 1.39lgN |
-|2-3树 红黑树| 2lgN | 2lgN | 1.00lgN | 1.00lgN |
+| 数据结构          |    >     | 最坏情况 |    >     | 平均情况 |
+| :---------------- | :------: | :------: | :------: | :------: |
+|                   | **查找** | **插入** | **查找** | **插入** |
+| 顺序查找 无序链表 |    N     |    N     |   N/2    |    N     |
+| 二分查找 有序数组 |   lgN    |    2N    |   lgN    |    N     |
+| 二叉查找树        |    N     |    N     | 1.39lgN  | 1.39lgN  |
+| 2-3树 红黑树      |   2lgN   |   2lgN   | 1.00lgN  | 1.00lgN  |
 
 ### B树，B-树，B+树，B*树
 
