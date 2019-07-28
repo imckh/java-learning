@@ -24,9 +24,9 @@ print_background: false
 | 平衡二叉树查找树(红黑树) | 最优的查找插入效率   | 链接需要额外空间                                                   |
 | 散列表 Hash              | 快速查找插入         | 需要计算数据的hash，无法进行有序性(排序之类)操作，链接需要额外空间 |
 
-## 符号表
+## 1 符号表
 
-### 无序链表
+### 1.1 无序链表
 
 最简单的选择是链表，每个节点存储一个键值对。
 
@@ -39,7 +39,7 @@ print_background: false
 4. 删除符号 69
     - ![delete69](delete69.gif)
 
-#### 实现
+#### 1.1.1 实现
 
 ```java
 public class SequentialSearchST<Key, Value> {
@@ -109,20 +109,10 @@ public class SequentialSearchST<Key, Value> {
     public int size() {
         return n;
     }
-
-    public static void main(String[] args) {
-        SequentialSearchST<String, Integer> st = new SequentialSearchST<String, Integer>();
-        for (int i = 0; !StdIn.isEmpty(); i++) {
-            String key = StdIn.readString();
-            st.put(key, i);
-        }
-        for (String s : st.keys())
-            StdOut.println(s + " " + st.get(s));
-    }
 }
 ```
 
-### 有序数组 -- 二分查找
+### 1.2 有序数组 -- 二分查找
 
 使用基于二分查找实现的符号表使用的数据结构是一对平行的数组，一个存储键一个存储值，可以高效的实现`get()`等操作。
 
@@ -136,7 +126,7 @@ public class SequentialSearchST<Key, Value> {
 - 对于`put()`，需要将`rank()`后边的键值向后移动一格。
 - 动态调整数组，使 1/4 < (元素个数/数组长度)
 
-#### 实现
+#### 1.2.1 实现
 
 ```java
 
@@ -270,7 +260,7 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
 ```
 
-### 总结
+### 1.3 总结
 
 一般情况下二分是比顺序查找要快的。但是二分没法做到高效插入(删除)。
 
@@ -281,9 +271,9 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 | 二分查找 有序数组 |   lgN    |    2N    |   lgN    |    N     |
 
 
-## 查找树
+## 2 查找树
 
-### 二叉查找树 Binary Search Tree
+### 2.1 二叉查找树 Binary Search Tree
 
 一个典型的二叉树
 
@@ -312,7 +302,7 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
     3. 随机插入删除 ![insert-delete-key-random.gif](insert-delete-key-random.gif)
 4. 实际上在结点的选择上是随机的，但是在经历足够长的时间插入删除后最终会变为N的时间复杂度
 
-#### 例子
+#### 2.1.1 例子
 
 - 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
     1. 创建/插入
@@ -337,7 +327,7 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
         - ![search](sequential-search-btree.gif)
     4. 相当于链表
 
-#### 实现
+#### 2.1.2 实现
 
 ```java
 public class BST<Key extends Comparable<Key>, Value> {
@@ -501,7 +491,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 }
 ```
 
-#### 二叉查找树的性能
+#### 2.1.3 二叉查找树的性能
 
 | 数据结构          |    >     | 最坏情况 |    >     | 平均情况 |
 | :---------------- | :------: | :------: | :------: | :------: |
@@ -511,9 +501,9 @@ public class BST<Key extends Comparable<Key>, Value> {
 | 二叉查找树        |    N     |    N     | 1.39lgN  | 1.39lgN  |
 
 
-## 平衡查找树 (Balanced search trees)
+## 3 平衡查找树 (Balanced search trees)
 
-### 2-3 查找树
+### 3.1 2-3查找树
 
 2–3树由约翰·霍普克洛夫特于1970年发明
 
@@ -537,9 +527,9 @@ public class BST<Key extends Comparable<Key>, Value> {
 
 尽管可以用不同数据结构表示2结点或3结点，但是太复杂了，要维护好几种不同的结点但是2-3，其间的各种转换可能更耗时，但红黑树可以，红黑基于2-3树。
 
-### 红黑树 Red-Black Trees --> 左倾红黑树
+### 3.2 红黑树 Red-Black Trees --> 左倾红黑树
 
-#### 简介
+#### 3.2.1 简介
 
 它在1972年由鲁道夫·贝尔发明，被称为"对称二叉B树"，它现代的名字源于 Leo J. Guibas 和 Robert Sedgewick 于1978年写的一篇论文。Robert Sedgewick在2008年的论文[Left-leaning Red-Black Trees](http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf)中将设计出左倾红黑树，它红黑树的变体，并保证对操作相同渐近的复杂性，但被设计成更容易实现。
 ![Robert Sedgewick](Robert-Sedgewick.png)
@@ -555,13 +545,13 @@ public class BST<Key extends Comparable<Key>, Value> {
 2. 没有任何一个结点同时和两个红链相连
 3. 该树是**完美的黑色平衡**的，任意叶子节点到根节点的黒链接的数量相同
 
-#### 将2-3树表示为红黑树
+#### 3.2.2 将2-3树表示为红黑树
 ![2-3-tree-to-red-black-tree.png](2-3-tree-to-red-black-tree.png)
 
 红黑树将红色的水平就是23数
 ![red-black-tree-horizontal-red-links-is-2-3-tree.png](red-black-tree-horizontal-red-links-is-2-3-tree.png)
 
-#### 颜色表示
+#### 3.2.3 颜色表示
 
 ![red-black-tree-red-black.png](red-black-tree-red-black.png)
 
@@ -589,7 +579,7 @@ private boolean isRed(Node x) {
 }
 ```
 
-#### 三种基本操作
+#### 3.2.4 三种基本操作
 
 将红色的右链接转换为左链接叫左旋。rotate-left
 ![rotate-left-anim.gif](rotate-left-anim.gif)
@@ -603,30 +593,30 @@ private boolean isRed(Node x) {
 红黑树的三种操作及代码
 ![red-black-tree-3-operations.png](red-black-tree-3-operations.png)
 
-#### 插入
+#### 3.2.5 插入
 
 1. 像二叉查找树一样添加新节点，使用红链接 链接父节点
 2. 如有必要，需要旋转以获得正确的3节点或4节点
 
-##### 向树底的2结点插入新键（树只含有一个2结点）
+##### 3.2.5.1 向树底的2结点插入新键（树只含有一个2结点）
 
 ![Insert-into-a-single-2-node.png](Insert-into-a-single-2-node.png)
 两种情况：左、右。
 
 因为在红黑树定义了红链接均为左链接，所以如果是向右插入需要左旋
 
-##### 向一个3结点插入新键（树只含有一个3结点）
+##### 3.2.5.2 向一个3结点插入新键（树只含有一个3结点）
 
 ![Insert-node-into-a-3-node.png](Insert-node-into-a-3-node.png)
 
 3结点有三种情况：左中右
 
-##### 分裂一个4结点
+##### 3.2.5.3 分裂一个4结点
 
 颜色转换 flip colors
 ![splitting-a-4-node-flip-colors.png](splitting-a-4-node-flip-colors.png)
 
-##### 向树底部的3结点插入新键（相当于在树底分裂一个4结点）
+##### 3.2.5.4 向树底部的3结点插入新键（相当于在树底分裂一个4结点）
 
 2种情况：父节点是一个2结点或者父节点是一个3结点
 
@@ -643,14 +633,21 @@ private boolean isRed(Node x) {
    4. 4结点在父节点右边
         ![splitting-4-node-Parent-3-node-right](splitting-4-node-Parent-3-node-right.png)
 
-##### 将红链在树中向上传递
+##### 3.2.5.5 将红链在树中向上传递
 
-- [ ] 补充为什么需要向上传递
+在23树的插入算法中需要分解3结点，将中间键插入父节点，直到遇到一个2结点或者根节点。
+在父节点看来，这样处理一个新的红结点的方式和插入一个的红结点完全一样。
+
+其中2结点就直接插入了。
+
+要在一个3结点下插入新键，先创建一个临时的4结点，将其分解并将红链接由中间键传递给它的父节点。重复这个过程，直到遇到一个2结点或者根节点。
+
+总之，使用左旋，右旋，变色 三个步骤就能完成插入操作。
 
 红黑树三种操作间的转换
 ![3-operations-turn.png](3-operations-turn.png)
 
-##### [插入例子](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
+##### 3.2.5.6 [插入例子](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
 
 
 插入255个随机数
@@ -662,7 +659,7 @@ private boolean isRed(Node x) {
 插入255个降序的数
 ![Insert 255 keys in a red-black BST in descending order](Insert-red-blackBST-descending-order.gif)
 
-##### 插入实现
+##### 3.2.5.7  插入实现
 
 ```java
 public void put(Key key, Value val) { 
@@ -687,29 +684,124 @@ private Node put(Node h, Key key, Value val) {
 }
 ```
 
-### 删除
+### 3.3 删除
 
-删除策略（适用于2-3和2-3-4树）
-- 不变：当前节点不是2节点
-- 必要时引入4节点
-- 从最底部删除key（叶子节点）
-- 在向上走的途中消除4节点
+#### 3.3.1 2-3-4树
 
-##### 删除最大
+234树的插入算法既能向上也能向下进行变换。
 
-删除最大
-![delete](deleteMax23.gif)
+234树中允许存在前边见过的4结点，其中沿查找路径向下变换是为了保证当前节点不是4-结点（这样树底才有空间来插入新键），沿路径向上变换是为了将之前创建的4结点配平。
 
-##### 删除最小
+1. 向下的变换中跟2-3树中分解临时4结点完全相同
+2. 如果根节点是4结点，将其分解成两个2结点，树高加1
+    - ![deletion-at-the-root.png](deletion-at-the-root.png)
+3. 在向下查找的过程中，如果遇到父节点是2结点的4结点，将4结点分解成两个2结点，并将中间键传递给父节点。
+    - ![deletion-4nodec-2nodef.png](deletion-4nodec-2nodef.png)
+4. 如果遇到一个父节点为3结点的4结点，将4结点分解成两个2结点，并将中间键传递给父节点，使父节点变为4结点
+    - ![deletion-4nodec-3nodef.png](deletion-4nodec-3nodef.png)
+5. 到达树底之后，只会遇到2结点或者3结点，所以可以插入新的键。
+    - ![deletion-left-children.png](deletion-left-children.png)
+
+删除的诀窍是：
+
+保证被删除的一定是红色，如果不是红色就想办法把它变成红色，就是说最后真正出现删除操作的key所在的2-3树节点里的key数一定是大于等于2的。
+
+这时候就需要，从一开始就必须从上面，左或右把其他节点的key借过来，
+免得删除操作出现在一个1个key节点中，破坏了树的平衡性。
+
+#### 3.3.2 删除最小
+
+从树底的3节点中删除一个键很简单，但是从树底的2结点中删除一键会留下一个空节点，这样会破坏树的平衡。
+
+所以为了保证不会删除一个2结点，需要沿着左链接向下进行变换，确保当前节点不是2结点（可能是3结点或者临时的4结点）。
+
+- 不是2结点的话可以直接删除
+- 跟是2结点且它的两个子节点都是2结点，可以直接将这三个结点变为一个4结点。
+    1. ![deletion-2-node-to-4-node](deletion-2-node-to-4-node.png)
+- 否则需要保证根节点的左子节点不是2结点，比如从其兄弟结点借一个过来。
+    1. 当前节点的左子节点不是2结点
+        - ![deletion-left-sub-not-2-node.png](deletion-left-sub-not-2-node.png)
+    2. 当前节点的左子节点是2结点，它的兄弟结点不是2结点，则从亲兄弟节点中移动一个键到左子节点中
+        - ![deletion-left-sub-2-node-move-brother.png](deletion-left-sub-2-node-move-brother.png)
+    3. 左子节点是2结点，且其亲兄弟结点也是2结点，则将左子节点、父节点中的最小键和亲兄弟结点结合成为一个4结点，父节点由3节点变为2结点或者由4结点变为3结点。
+        - ![deletion-left-sub-2-node-brother-2.png](deletion-left-sub-2-node-brother-2.png)
+
+在遍历查找的过程执行这个过程，最后能够得到一个含有最小键的3结点或4结点，将其删除后，再回头向上分解所有的临时4结点。
+
+---
+
+**在红黑树中**
+
+最简单的情况，不是2结点 `h.left = RED`
+![deletion-h-left-RED](deletion-h-left-RED.png)
+
+需要从兄弟结点借一个结点的情况
+- `h.left && h.left.left = BLACK`
+- 两种情况，取决于`h.right.left`
+    - BLACK 
+        - ![](deletion-h-right-left-is-BLACK.png)
+    - RED，先将 `h.right.left` 右旋，然后将 `h.right` 左旋， 然后变色h
+        - ![](deletion-h-right-left-is-RED.png)
+        - 实现
+            ```java
+            private Node moveRedLeft(Node h) {
+                colorFlip(h);
+                if (isRed(h.right.left)) {
+                    h.right = rotateRight(h.right);
+                    h = rotateLeft(h);
+                    colorFlip(h);
+                }
+                return h;
+            }
+            ```
+
+删除最小的实现
+```java
+public void deleteMin() {
+    root = deleteMin(root);
+    root.color = BLACK;
+}
+private Node deleteMin(Node h) {
+    if (h.left == null) // 从树底移除(h必须是红链接)
+        return null;
+
+    if (!isRed(h.left) && !isRed(h.left.left)) // 红链接向下
+        h = moveRedLeft(h); 
+
+    h.left = deleteMin(h.left);
+
+    // 向上修复分解临时4结点
+    return fixUp(h);
+}
+```
+
+例子
+![deletion-delete-min-steps.png](deletion-delete-min-steps.png)
 
 删除最小
 ![delete](deleteMin23.gif)
 
-##### 随机删除
+#### 3.3.3 删除最大和删除最小类似
+
+删除最大
+![delete](deleteMax23.gif)
+
+#### 3.3.4 随机删除
+
+在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前节点不是2结点。
+
+如果被查找的键在树的底部，直接删除。
+
+如果不在底部，则将找到的结点和其后继结点交换（跟二叉查找树中的删除一样）。
+
+因为当前节点不是必然不是2结点，所以就是在根节点不是2节点的子树中删除最小的键，
+
+同样删除之后需要向上回溯并分解临时4结点。
+
 随机删除
 ![delete](deleteRandom23.gif)
 
-#### 实现
+#### 3.3.5 实现
 
 ```java
 public class RedBlackBST<Key extends Comparable<Key>, Value> {
@@ -1052,7 +1144,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 }
 ```
 
-### 总结
+### 3.4 总结
 
 | 数据结构          |    >     | 最坏情况 |    >     | 平均情况 |
 | :---------------- | :------: | :------: | :------: | :------: |
@@ -1062,7 +1154,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 | 二叉查找树        |    N     |    N     | 1.39lgN  | 1.39lgN  |
 | 2-3树 红黑树      |   2lgN   |   2lgN   | 1.00lgN  | 1.00lgN  |
 
-### B树，B-树，B+树，B*树
+### 3.5 B树，B-树，B+树，B*树
 
 1. B树(Binary search tree) 
     - 二叉搜索树
@@ -1088,22 +1180,4 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     - 在B+树基础上，为非叶子结点也增加链表指针，将结点的最低利用率从1/2提高到2/3；
 
 
-## 散列表
-
-
-## ~~平衡查找树 AVL Trees (Balanced binary search trees)~~
-
-- 随机序列 `15,41,69,60,4,61,5,57,90,94,56,85,33,47,76,14,64`
-    1. 创建/插入
-        - ![put](AVL_random-put.gif)
-    2. 从随机序列中删除 `5,14,90,69,41`
-        - ![delete](AVL_delete-from-random.gif)
-    3. 查找 `10,33,56,55`
-        - ![search](AVL_search-from-random.gif)
-- 顺序序列
-    1. 创建/插入 顺序序列 `1,2,3,4,5,6,7,8,9,10`
-        - ![put](AVL_sequential-put.gif)
-    2. 从顺序序列中删除 `10, 5, 1`
-        - ![delete](AVL_sequential-delete.gif)
-    3. 查找 相当于线性查找 `5, 11`
-        - ![search](AVL_sequential-search.gif)
+## 4 散列表
