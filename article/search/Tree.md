@@ -788,6 +788,8 @@ private Node deleteMin(Node h) {
 
 #### 3.3.4 随机删除
 
+[双击结点删除](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
+
 在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前节点不是2结点。
 
 如果被查找的键在树的底部，直接删除。
