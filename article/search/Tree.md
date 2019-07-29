@@ -738,11 +738,11 @@ private Node put(Node h, Key key, Value val) {
 需要从兄弟结点借一个结点的情况
 - `h.left && h.left.left = BLACK`
 - 两种情况，取决于`h.right.left`
-    - BLACK 
+    - BLACK
         - ![](deletion-h-right-left-is-BLACK.png)
     - RED，先将 `h.right.left` 右旋，然后将 `h.right` 左旋， 然后变色h
         - ![](deletion-h-right-left-is-RED.png)
-        - 实现
+        - 实现(将红链接向左子节点移动)
             ```java
             private Node moveRedLeft(Node h) {
                 colorFlip(h);
@@ -758,6 +758,9 @@ private Node put(Node h, Key key, Value val) {
 删除最小的实现
 ```java
 public void deleteMin() {
+    if (!isRed(root.left) && !isRed(root.right))
+        root.color = RED;
+
     root = deleteMin(root);
     root.color = BLACK;
 }
@@ -765,12 +768,12 @@ private Node deleteMin(Node h) {
     if (h.left == null) // 从树底移除(h必须是红链接)
         return null;
 
-    if (!isRed(h.left) && !isRed(h.left.left)) // 红链接向下
-        h = moveRedLeft(h); 
+    if (!isRed(h.left) && !isRed(h.left.left)) // 可能向兄弟结点借一个结点
+        h = moveRedLeft(h); // 红链接向下传递
 
     h.left = deleteMin(h.left);
 
-    // 向上修复分解临时4结点
+    //向上修复分解临时4结点 
     return fixUp(h);
 }
 ```
@@ -783,6 +786,48 @@ private Node deleteMin(Node h) {
 
 #### 3.3.3 删除最大和删除最小类似
 
+1. 在树底，且是2结点或3结点，（对应234树中 不需要从兄弟结点中借一结点过来）
+    - ![deletion-deletemax-bottom.png](deletion-deletemax-bottom.png)
+2. 对应234树中，需要从兄弟结点中借一结点过来。
+    1. `h.left.left == BLACK`（兄弟结点是个2结点）
+        - ![deletion-max-h-left-leftBLACK.png](deletion-max-h-left-leftBLACK.png)
+    2. `h.left.left == RED`（兄弟结点是个3结点或4结点）
+        - ![deletion-max-h-left-leftRED.png](deletion-max-h-left-leftRED.png)
+    3.  这一步是为了将红链接向右边的子节点移动(`moveRedRight`)。
+        ```java
+        private Node moveRedRight(Node h) {
+            colorFlip(h);
+            if (isRed(h.left.left)) {
+                h = rotateRight(h);
+                colorFlip(h);
+            }
+            return h;
+        }
+        ```
+
+删除最大的实现
+```java
+public void deleteMax() {
+    root = deleteMax(root);
+    root.color = BLACK;
+}
+private Node deleteMax(Node h) {
+    if (isRed(h.left)) // 这里比删除最小多一步 红链在左侧右旋  以便传递到右侧的子节点中
+        h = rotateRight(h);
+
+    if (h.right == null)
+        return null;
+
+    if (!isRed(h.right) && !isRed(h.right.left))  // 可能向兄弟结点借一个结点
+        h = moveRedRight(h); // 红链接向下传递
+
+    h.left = deleteMax(h.left);
+    //向上修复分解临时4结点 
+    return fixUp(h);
+}
+```
+
+
 删除最大
 ![delete](deleteMax23.gif)
 
@@ -790,15 +835,13 @@ private Node deleteMin(Node h) {
 
 [双击结点删除](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
 
-在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前节点不是2结点。
+1. 在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前节点不是2结点。
+2. 如果被查找的键在树的底部（基于上述变换操作直到树底，结点肯定不是2结点），直接删除。
+3. 如果不在底部，则将找到的结点和其后继结点交换（跟二叉查找树中的删除一样）。
+    - 举例
+    - ![deletion-use-deletemin.png](deletion-use-deletemin.png)
+4. 因为当前节点不是必然不是2结点，所以就是在根节点不是2节点的子树中删除最小的键，同样删除之后需要向上回溯并分解临时4结点。
 
-如果被查找的键在树的底部，直接删除。
-
-如果不在底部，则将找到的结点和其后继结点交换（跟二叉查找树中的删除一样）。
-
-因为当前节点不是必然不是2结点，所以就是在根节点不是2节点的子树中删除最小的键，
-
-同样删除之后需要向上回溯并分解临时4结点。
 
 随机删除
 ![delete](deleteRandom23.gif)
