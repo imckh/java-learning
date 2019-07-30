@@ -28,7 +28,7 @@ print_background: false
 
 ### 1.1 无序链表
 
-最简单的选择是链表，每个节点存储一个键值对。
+最简单的选择是链表，每个结点存储一个键值对。
 
 1. 插入
     - ![put](put1.gif)
@@ -72,7 +72,7 @@ public class SequentialSearchST<Key, Value> {
         return null;
     }
 
-    // 找到指定节点，找到则更新其值，否则插入
+    // 找到指定结点，找到则更新其值，否则插入
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null"); 
         if (val == null) {
@@ -280,22 +280,22 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 ![treesample](btreesample.png)
 
 1. 查找（与二分查找几乎一致）
-    1. 如果树是空的，查找未命中。对于未命中的查找，终点是空节点。
-    2. 被查找的键和根节点的键相同，查找命中
+    1. 如果树是空的，查找未命中。对于未命中的查找，终点是空结点。
+    2. 被查找的键和根结点的键相同，查找命中
     3. 递归地在子树中查找
         - 被查找的键较小则选择左子树
         - 较大选择右子树
     4. 最好、平均、最坏情况 ![BSTpossibilities](BSTpossibilities.png)
 2. 插入（和查找类似）
     1. 树是空的，返回含有该键值的新结点
-    2. 被查找的键小于根节点的键，在左子树中插入该键，否则在右边
+    2. 被查找的键小于根结点的键，在左子树中插入该键，否则在右边
     3. 随机插入的情况 ![insert-key-random-order.gif](insert-key-random-order.gif)
 3. 得到树的最小值
     1. 相当于得到结点的最左子结点
-    2. 递归得到左子节点直到左子节点的左子树为空
+    2. 递归得到左子结点直到左子结点的左子树为空
 3. 删除
     1. 删除最大最小值
-        - 最小：深入根节点的左子节点直到遇到空连接，然后将指向该节点的链接指向该节点的右子树
+        - 最小：深入根结点的左子结点直到遇到空链接，然后将指向该结点的链接指向该结点的右子树
         - 删除最大是删除最小的相反操作
     2. 删除： 删除结点x后用它的后继结点代替（其右子树的最小结点）
         > 最早由 T. Hibbard 在1962年解决了这个难题
@@ -331,7 +331,7 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
 ```java
 public class BST<Key extends Comparable<Key>, Value> {
-    private Node root;             // 根节点
+    private Node root;             // 根结点
 
     private class Node {
         private Key key;           // key排序
@@ -390,7 +390,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 
     // 插入
     private Node put(Node x, Key key, Value val) {
-        if (x == null) return new Node(key, val, 1); // 空节点直接新建
+        if (x == null) return new Node(key, val, 1); // 空结点直接新建
         int cmp = key.compareTo(x.key); // 大的往右，小的往左
         if      (cmp < 0) x.left  = put(x.left,  key, val);
         else if (cmp > 0) x.right = put(x.right, key, val);
@@ -404,7 +404,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         root = deleteMin(root);
     }
 
-    // 深入根节点的左子节点直到遇到空连接，然后将指向该节点的链接指向该节点的右子树
+    // 深入根结点的左子结点直到遇到空链接，然后将指向该结点的链接指向该结点的右子树
     // 返回删除后的头结点
     private Node deleteMin(Node x) {
         if (x.left == null) return x.right;
@@ -507,16 +507,16 @@ public class BST<Key extends Comparable<Key>, Value> {
 
 2–3树由约翰·霍普克洛夫特于1970年发明
 
-下面是一个典型的2-3 树，维持了完美的平衡，每个到根节点的路径长度一致。
+下面是一个典型的2-3 树，维持了完美的平衡，每个到根结点的路径长度一致。
 ![2-3tree](2-3-tree-sample.png)
-可以看到2结点和普通二叉搜索树一样。3结点的最左全部小于该节点，中间的在两结点之间，右边的全部大于该节点。
+可以看到2结点和普通二叉搜索树一样。3结点的最左全部小于该结点，中间的在两结点之间，右边的全部大于该结点。
 
 查找十分简单，与二叉搜索树类似。
 
-2-3的操作，将临时的4节点分裂成2-3节点
+2-3的操作，将临时的4结点分裂成2-3结点
 ![Splitting a temporary 4-node in a 2-3 tree (summary)](Splitting-temporary-4-node-in-a-2-3-tree.png)
 
-分裂4结点到3结点时其他的子节点并没有受到影响，只作用于其结点及父节点。
+分裂4结点到3结点时其他的子结点并没有受到影响，只作用于其结点及父结点。
 ![2-3-tree-Splitting-4-node.png](2-3-tree-Splitting-4-node.png)
 
 使用随机值构造的2-3数
@@ -535,7 +535,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 ![Robert Sedgewick](Robert-Sedgewick.png)
 
 红黑树中将树的链接分为两种类型：
-1. 红链接将两个结点连接起来构成 3结点
+1. 红链接将两个结点链接起来构成 3结点
 2. 黑链接则是2-3树中的普通链接
 
 使用这种方法的好处是不用修改就可以用标准二叉查找树的`get()`方法，对任意 2-3树 只要对结点进行转换，就能得到一个红黑树。
@@ -543,7 +543,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 定义：
 1. 红链接均为左链接
 2. 没有任何一个结点同时和两个红链相连
-3. 该树是**完美的黑色平衡**的，任意叶子节点到根节点的黒链接的数量相同
+3. 该树是**完美的黑色平衡**的，任意叶子结点到根结点的黒链接的数量相同
 
 #### 3.2.2 将2-3树表示为红黑树
 ![2-3-tree-to-red-black-tree.png](2-3-tree-to-red-black-tree.png)
@@ -595,8 +595,8 @@ private boolean isRed(Node x) {
 
 #### 3.2.5 插入
 
-1. 像二叉查找树一样添加新节点，使用红链接 链接父节点
-2. 如有必要，需要旋转以获得正确的3节点或4节点
+1. 像二叉查找树一样添加新结点，使用红链接 链接父结点
+2. 如有必要，需要旋转以获得正确的3结点或4结点
 
 ##### 3.2.5.1 向树底的2结点插入新键（树只含有一个2结点）
 
@@ -618,29 +618,29 @@ private boolean isRed(Node x) {
 
 ##### 3.2.5.4 向树底部的3结点插入新键（相当于在树底分裂一个4结点）
 
-2种情况：父节点是一个2结点或者父节点是一个3结点
+2种情况：父结点是一个2结点或者父结点是一个3结点
 
-1. 父节点是一个2结点
-   1. 4结点在父节点左边
+1. 父结点是一个2结点
+   1. 4结点在父结点左边
         ![splitting-4-node-Parent-2-node-left](splitting-4-node-Parent-2-node-left.png)
-   2. 4结点在父节点右边
+   2. 4结点在父结点右边
         ![splitting-4-node-Parent-2-node-right](splitting-4-node-Parent-2-node-right.png)
-2. 父节点是一个3结点
-   1. 4结点在父节点左边
+2. 父结点是一个3结点
+   1. 4结点在父结点左边
         ![splitting-4-node-Parent-3-node-left](splitting-4-node-Parent-3-node-left.png)
-   2. 4结点在父节点中间
+   2. 4结点在父结点中间
         ![splitting-4-node-Parent-3-node-middle](splitting-4-node-Parent-3-node-middle.png)
-   4. 4结点在父节点右边
+   4. 4结点在父结点右边
         ![splitting-4-node-Parent-3-node-right](splitting-4-node-Parent-3-node-right.png)
 
 ##### 3.2.5.5 将红链在树中向上传递
 
-在23树的插入算法中需要分解3结点，将中间键插入父节点，直到遇到一个2结点或者根节点。
-在父节点看来，这样处理一个新的红结点的方式和插入一个的红结点完全一样。
+在23树的插入算法中需要分解3结点，将中间键插入父结点，直到遇到一个2结点或者根结点。
+在父结点看来，这样处理一个新的红结点的方式和插入一个的红结点完全一样。
 
 其中2结点就直接插入了。
 
-要在一个3结点下插入新键，先创建一个临时的4结点，将其分解并将红链接由中间键传递给它的父节点。重复这个过程，直到遇到一个2结点或者根节点。
+要在一个3结点下插入新键，先创建一个临时的4结点，将其分解并将红链接由中间键传递给它的父结点。重复这个过程，直到遇到一个2结点或者根结点。
 
 总之，使用左旋，右旋，变色 三个步骤就能完成插入操作。
 
@@ -676,7 +676,7 @@ private Node put(Node h, Key key, Value val) {
     else                h.val = val; // key存在则更新值
 
     if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h); // 右红左旋
-    if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h); // 左两个子节点都红 右旋（右旋后变色）
+    if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h); // 左两个子结点都红 右旋（右旋后变色）
     if (isRed(h.left) && isRed(h.right)) flipColors(h); // 左右都红变色
 
     h.N = size(h.left) + size(h.right) + 1;
@@ -690,40 +690,40 @@ private Node put(Node h, Key key, Value val) {
 
 234树的插入算法既能向上也能向下进行变换。
 
-234树中允许存在前边见过的4结点，其中沿查找路径向下变换是为了保证当前节点不是4-结点（这样树底才有空间来插入新键），沿路径向上变换是为了将之前创建的4结点配平。
+234树中允许存在前边见过的4结点，其中沿查找路径向下变换是为了保证当前结点不是4-结点（这样树底才有空间来插入新键），沿路径向上变换是为了将之前创建的4结点配平。
 
 1. 向下的变换中跟2-3树中分解临时4结点完全相同
-2. 如果根节点是4结点，将其分解成两个2结点，树高加1
+2. 如果根结点是4结点，将其分解成两个2结点，树高加1
     - ![deletion-at-the-root.png](deletion-at-the-root.png)
-3. 在向下查找的过程中，如果遇到父节点是2结点的4结点，将4结点分解成两个2结点，并将中间键传递给父节点。
+3. 在向下查找的过程中，如果遇到父结点是2结点的4结点，将4结点分解成两个2结点，并将中间键传递给父结点。
     - ![deletion-4nodec-2nodef.png](deletion-4nodec-2nodef.png)
-4. 如果遇到一个父节点为3结点的4结点，将4结点分解成两个2结点，并将中间键传递给父节点，使父节点变为4结点
+4. 如果遇到一个父结点为3结点的4结点，将4结点分解成两个2结点，并将中间键传递给父结点，使父结点变为4结点
     - ![deletion-4nodec-3nodef.png](deletion-4nodec-3nodef.png)
 5. 到达树底之后，只会遇到2结点或者3结点，所以可以插入新的键。
     - ![deletion-left-children.png](deletion-left-children.png)
 
 删除的诀窍是：
 
-保证被删除的一定是红色，如果不是红色就想办法把它变成红色，就是说最后真正出现删除操作的key所在的2-3树节点里的key数一定是大于等于2的。
+保证被删除的一定是红色，如果不是红色就想办法把它变成红色，就是说最后真正出现删除操作的key所在的2-3树结点里的key数一定是大于等于2的。
 
-这时候就需要，从一开始就必须从上面，左或右把其他节点的key借过来，
-免得删除操作出现在一个1个key节点中，破坏了树的平衡性。
+这时候就需要，从一开始就必须从上面，左或右把其他结点的key借过来，
+免得删除操作出现在一个1个key结点中，破坏了树的平衡性。
 
 #### 3.3.2 删除最小
 
-从树底的3节点中删除一个键很简单，但是从树底的2结点中删除一键会留下一个空节点，这样会破坏树的平衡。
+从树底的3结点中删除一个键很简单，但是从树底的2结点中删除一键会留下一个空结点，这样会破坏树的平衡。
 
-所以为了保证不会删除一个2结点，需要沿着左链接向下进行变换，确保当前节点不是2结点（可能是3结点或者临时的4结点）。
+所以为了保证不会删除一个2结点，需要沿着左链接向下进行变换，确保当前结点不是2结点（可能是3结点或者临时的4结点）。
 
 - 不是2结点的话可以直接删除
-- 跟是2结点且它的两个子节点都是2结点，可以直接将这三个结点变为一个4结点。
+- 跟是2结点且它的两个子结点都是2结点，可以直接将这三个结点变为一个4结点。
     1. ![deletion-2-node-to-4-node](deletion-2-node-to-4-node.png)
-- 否则需要保证根节点的左子节点不是2结点，比如从其兄弟结点借一个过来。
-    1. 当前节点的左子节点不是2结点
+- 否则需要保证根结点的左子结点不是2结点，比如从其兄弟结点借一个过来。
+    1. 当前结点的左子结点不是2结点
         - ![deletion-left-sub-not-2-node.png](deletion-left-sub-not-2-node.png)
-    2. 当前节点的左子节点是2结点，它的兄弟结点不是2结点，则从亲兄弟节点中移动一个键到左子节点中
+    2. 当前结点的左子结点是2结点，它的兄弟结点不是2结点，则从亲兄弟结点中移动一个键到左子结点中
         - ![deletion-left-sub-2-node-move-brother.png](deletion-left-sub-2-node-move-brother.png)
-    3. 左子节点是2结点，且其亲兄弟结点也是2结点，则将左子节点、父节点中的最小键和亲兄弟结点结合成为一个4结点，父节点由3节点变为2结点或者由4结点变为3结点。
+    3. 左子结点是2结点，且其亲兄弟结点也是2结点，则将左子结点、父结点中的最小键和亲兄弟结点结合成为一个4结点，父结点由3结点变为2结点或者由4结点变为3结点。
         - ![deletion-left-sub-2-node-brother-2.png](deletion-left-sub-2-node-brother-2.png)
 
 在遍历查找的过程执行这个过程，最后能够得到一个含有最小键的3结点或4结点，将其删除后，再回头向上分解所有的临时4结点。
@@ -742,7 +742,7 @@ private Node put(Node h, Key key, Value val) {
         - ![](deletion-h-right-left-is-BLACK.png)
     - RED，先将 `h.right.left` 右旋，然后将 `h.right` 左旋， 然后变色h
         - ![](deletion-h-right-left-is-RED.png)
-        - 实现(将红链接向左子节点移动)
+        - 实现(将红链接向左子结点移动)
             ```java
             private Node moveRedLeft(Node h) {
                 colorFlip(h);
@@ -793,7 +793,7 @@ private Node deleteMin(Node h) {
         - ![deletion-max-h-left-leftBLACK.png](deletion-max-h-left-leftBLACK.png)
     2. `h.left.left == RED`（兄弟结点是个3结点或4结点）
         - ![deletion-max-h-left-leftRED.png](deletion-max-h-left-leftRED.png)
-    3.  这一步是为了将红链接向右边的子节点移动(`moveRedRight`)。
+    3.  这一步是为了将红链接向右边的子结点移动(`moveRedRight`)。
         ```java
         private Node moveRedRight(Node h) {
             colorFlip(h);
@@ -812,7 +812,7 @@ public void deleteMax() {
     root.color = BLACK;
 }
 private Node deleteMax(Node h) {
-    if (isRed(h.left)) // 这里比删除最小多一步 红链在左侧右旋  以便传递到右侧的子节点中
+    if (isRed(h.left)) // 这里比删除最小多一步 红链在左侧右旋  以便传递到右侧的子结点中
         h = rotateRight(h);
 
     if (h.right == null)
@@ -835,12 +835,12 @@ private Node deleteMax(Node h) {
 
 [双击结点删除](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
 
-1. 在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前节点不是2结点。
+1. 在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前结点不是2结点。
 2. 如果被查找的键在树的底部（基于上述变换操作直到树底，结点肯定不是2结点），直接删除。
 3. 如果不在底部，则将找到的结点和其后继结点交换（跟二叉查找树中的删除一样）。
     - 举例
     - ![deletion-use-deletemin.png](deletion-use-deletemin.png)
-4. 因为当前节点不是必然不是2结点，所以就是在根节点不是2节点的子树中删除最小的键，同样删除之后需要向上回溯并分解临时4结点。
+4. 因为当前结点不是必然不是2结点，所以就是在根结点不是2结点的子树中删除最小的键，同样删除之后需要向上回溯并分解临时4结点。
 
 
 随机删除
@@ -1055,11 +1055,8 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
             if (!isRed(h.right) && !isRed(h.right.left))
                 h = moveRedRight(h);
             if (key.compareTo(h.key) == 0) {
-                Node x = min(h.right);
-                h.key = x.key;
-                h.val = x.val;
-                // h.val = get(h.right, min(h.right).key);
-                // h.key = min(h.right).key;
+                h.val = get(h.right, min(h.right).key);
+                h.key = min(h.right).key;
                 h.right = deleteMin(h.right);
             }
             else h.right = delete(h.right, key);
@@ -1091,10 +1088,10 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         return x;
     }
 
-    //h的两个自连接颜色相同且到h的颜色与子链接颜色不同
+    //h的两个自链接颜色相同且到h的颜色与子链接颜色不同
     // 注意：
     // 这里的flipColors方法会补全三条链的颜色，而不是实现插入操作时实现的flipColors方法
-    // 对于删除，将父节点设为黑而将两个子节点都设为红
+    // 对于删除，将父结点设为黑而将两个子结点都设为红
     private void flipColors(Node h) {
         h.color = !h.color;
         h.left.color = !h.left.color;
@@ -1102,7 +1099,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     // 假设h为红色，h.left和h.left.left都是黑色
-    // 将h.left或h.left的子节点之一变为红色
+    // 将h.left或h.left的子结点之一变为红色
     private Node moveRedLeft(Node h) {
         // assert (h != null);
         // assert isRed(h) && !isRed(h.left) && !isRed(h.left.left);
@@ -1117,7 +1114,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     // 假设h为红色，h.right和h.right.left都是黑色
-    // 将h.right或h.right的子节点之一变为红色
+    // 将h.right或h.right的子结点之一变为红色
     private Node moveRedRight(Node h) {
         // assert (h != null);
         // assert isRed(h) && !isRed(h.right) && !isRed(h.right.left);
@@ -1207,10 +1204,10 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     - 是一种多路搜索树，并不是二叉的
     - 数据库索引技术里大量使用B-树和B+树的数据结构
 3. B+树
-    - B+树是B-树的一个升级版，相对于B-树来说B+树更充分的利用了节点的空间，让查询速度更加稳定，其速度完全接近于二分法查找
-    - B+跟B-树不同B+树的非叶子节点不保存关键字记录的指针，只进行数据索引，这样使得B+树每个非叶子节点所能保存的关键字大大增加
-    - B+树叶子节点保存了父节点的所有关键字记录的指针，所有数据地址必须要到叶子节点才能获取到。所以每次数据查询的次数都一样
-    - B+树叶子节点的关键字从小到大有序排列，左边结尾数据都会保存右边节点开始数据的指针
+    - B+树是B-树的一个升级版，相对于B-树来说B+树更充分的利用了结点的空间，让查询速度更加稳定，其速度完全接近于二分法查找
+    - B+跟B-树不同B+树的非叶子结点不保存关键字记录的指针，只进行数据索引，这样使得B+树每个非叶子结点所能保存的关键字大大增加
+    - B+树叶子结点保存了父结点的所有关键字记录的指针，所有数据地址必须要到叶子结点才能获取到。所以每次数据查询的次数都一样
+    - B+树叶子结点的关键字从小到大有序排列，左边结尾数据都会保存右边结点开始数据的指针
 4. B*树
     - B*树是B+树的变种，在B+树的非根和非叶子结点再增加指向兄弟的指针
 
