@@ -686,6 +686,12 @@ private Node put(Node h, Key key, Value val) {
 
 ### 3.3 删除
 
+从树底删除
+
+从树底的3结点中删除一个键很简单，但是从树底的2结点中删除一键会留下一个空结点，这样会破坏树的平衡。
+
+所以为了保证不会删除一个2结点，需要沿着左链接（或右链接）向下进行变换，确保当前结点不是2结点（可能是3结点或者临时的4结点）。
+
 #### 3.3.1 2-3-4树
 
 234树的插入算法既能向上也能向下进行变换。
@@ -709,11 +715,82 @@ private Node put(Node h, Key key, Value val) {
 这时候就需要，从一开始就必须从上面，左或右把其他结点的key借过来，
 免得删除操作出现在一个1个key结点中，破坏了树的平衡性。
 
-#### 3.3.2 删除最小
+#### 3.3.2 删除最大
 
-从树底的3结点中删除一个键很简单，但是从树底的2结点中删除一键会留下一个空结点，这样会破坏树的平衡。
+最大值肯定在最右
 
-所以为了保证不会删除一个2结点，需要沿着左链接向下进行变换，确保当前结点不是2结点（可能是3结点或者临时的4结点）。
+##### 3.3.2.1 在234树中
+
+1. 删除的结点在3结点或者4结点中，直接删除掉
+   - ![deletion-234-tree-34node.png](deletion-234-tree-34node.png)
+2. 要删除的结点是2结点，如果直接删除就会破坏红黑树的平衡，所以在删除之前，要进行一定的变换，变成3结点或者4结点，也就是借一个或者两个结点过来。
+   - ![deletion-234-tree-borrow-from-sibling.png](deletion-234-tree-borrow-from-sibling.png)
+   - 根据父结点的不同。3结点或者4结点和兄弟结点的不同可以分为六种情况，但其中又可以分为两类
+       1. 兄弟结点不是2结点，就可以直接从兄弟结点借一个结点过来
+       2. 兄弟结点是2结点，则从父结点中借一个过来，然后和兄弟结点合并成一个4结点
+
+##### 3.3.2.2 红黑树中
+1. 在树底，且是2结点或3结点，（对应234树中 不需要从兄弟结点中借一结点过来）
+    - ![deletion-deletemax-bottom.png](deletion-deletemax-bottom.png)
+2. 对应234树中，需要从兄弟结点中借一结点过来。
+    1. `h.left.left == BLACK`（兄弟结点是个2结点）
+        - ![deletion-max-h-left-leftBLACK.png](deletion-max-h-left-leftBLACK.png)
+    2. `h.left.left == RED`（兄弟结点不是2结点，是个3结点或4结点）
+        - ![deletion-max-h-left-leftRED.png](deletion-max-h-left-leftRED.png)
+    3.  这一步是为了将红链接向右边的子结点移动(`moveRedRight`)。
+        ```java
+        private Node moveRedRight(Node h) {
+            colorFlip(h);
+            if (isRed(h.left.left)) {
+                h = rotateRight(h);
+                colorFlip(h);
+            }
+            return h;
+        }
+        ```
+
+##### 3.3.2.3 步骤
+
+1. 首先如果左链接为红则右旋，因为找最大结点在最右边
+2. 如果，已经到了最底部，那么直接移除就行，移除的要求是最底部的结点一定是red
+3. 如果遇到了2结点就借一个结点
+4. 继续往下递归查找
+5. 删除完毕，就恢复红黑树
+
+##### 3.3.2.3 举例
+
+![deletion-llrb-tree-delete-max-example1](deletion-llrb-tree-delete-max-example1.png)
+![deletion-llrb-tree-delete-max-example2](deletion-llrb-tree-delete-max-example2.png)
+
+##### 3.3.2.5 删除最大的实现
+```java
+public void deleteMax() {
+    root = deleteMax(root);
+    root.color = BLACK;
+}
+private Node deleteMax(Node h) {
+    if (isRed(h.left)) // 这里比删除最小多一步 红链在左侧右旋  以便传递到右侧的子结点中
+        h = rotateRight(h);
+
+    if (h.right == null)
+        return null;
+
+    if (!isRed(h.right) && !isRed(h.right.left))  // 可能向兄弟结点借一个结点
+        h = moveRedRight(h); // 红链接向下传递
+
+    h.left = deleteMax(h.left);
+    //向上修复分解临时4结点 
+    return fixUp(h);
+}
+```
+
+
+删除最大
+![delete](deleteMax23.gif)
+
+#### 3.3.3 删除最小
+
+##### 3.3.3.1 在234树中
 
 - 不是2结点的话可以直接删除
 - 跟是2结点且它的两个子结点都是2结点，可以直接将这三个结点变为一个4结点。
@@ -725,35 +802,38 @@ private Node put(Node h, Key key, Value val) {
         - ![deletion-left-sub-2-node-move-brother.png](deletion-left-sub-2-node-move-brother.png)
     3. 左子结点是2结点，且其亲兄弟结点也是2结点，则将左子结点、父结点中的最小键和亲兄弟结点结合成为一个4结点，父结点由3结点变为2结点或者由4结点变为3结点。
         - ![deletion-left-sub-2-node-brother-2.png](deletion-left-sub-2-node-brother-2.png)
+- 总结
+    1. 不变量，就是h或者h的left一定是红色的（不是2结点）。遇到底部的红结点，就直接删除了。
+    2. 然后就是对于2结点需要从兄弟结点中借一个结点变成3结点或者4结点，2结点的条件就是，h.left和h.left.left均为黑色的。
+    3. 然后其中又有两种情况，
+       1. 如果h.right.left为黑，则说明兄弟结点也是2结点，就从父结点借结点，直接color flip即可
+       2. 如果h.right.left为红，则可以直接从兄弟结点借一个结点过来
 
 在遍历查找的过程执行这个过程，最后能够得到一个含有最小键的3结点或4结点，将其删除后，再回头向上分解所有的临时4结点。
 
----
+##### 3.3.3.2 在红黑树中
 
-**在红黑树中**
-
-最简单的情况，不是2结点 `h.left = RED`
-![deletion-h-left-RED](deletion-h-left-RED.png)
-
-需要从兄弟结点借一个结点的情况
-- `h.left && h.left.left = BLACK`
-- 两种情况，取决于`h.right.left`
-    - BLACK
-        - ![](deletion-h-right-left-is-BLACK.png)
-    - RED，先将 `h.right.left` 右旋，然后将 `h.right` 左旋， 然后变色h
-        - ![](deletion-h-right-left-is-RED.png)
-        - 实现(将红链接向左子结点移动)
-            ```java
-            private Node moveRedLeft(Node h) {
-                colorFlip(h);
-                if (isRed(h.right.left)) {
-                    h.right = rotateRight(h.right);
-                    h = rotateLeft(h);
-                    colorFlip(h);
-                }
-                return h;
-            }
-            ```
+1. 最简单的情况，不是2结点 `h.left = RED`
+    - ![deletion-h-left-RED](deletion-h-left-RED.png)
+2. 需要从兄弟结点借一个结点的情况
+   - `h.left && h.left.left = BLACK`
+   - 两种情况，取决于`h.right.left`
+       - BLACK(兄弟结点是2结点，需要从父结点借一个)
+           - ![](deletion-h-right-left-is-BLACK.png)
+       - RED(兄弟结点不是2结点，从兄弟结点借一个)，先将 `h.right.left` 右旋，然后将 `h.right` 左旋， 然后变色h
+           - ![](deletion-h-right-left-is-RED.png)
+           - 实现(将红链接向左子结点移动)
+               ```java
+               private Node moveRedLeft(Node h) {
+                   colorFlip(h);
+                   if (isRed(h.right.left)) {
+                       h.right = rotateRight(h.right);
+                       h = rotateLeft(h);
+                       colorFlip(h);
+                   }
+                   return h;
+               }
+               ```
 
 删除最小的实现
 ```java
@@ -784,62 +864,32 @@ private Node deleteMin(Node h) {
 删除最小
 ![delete](deleteMin23.gif)
 
-#### 3.3.3 删除最大和删除最小类似
-
-1. 在树底，且是2结点或3结点，（对应234树中 不需要从兄弟结点中借一结点过来）
-    - ![deletion-deletemax-bottom.png](deletion-deletemax-bottom.png)
-2. 对应234树中，需要从兄弟结点中借一结点过来。
-    1. `h.left.left == BLACK`（兄弟结点是个2结点）
-        - ![deletion-max-h-left-leftBLACK.png](deletion-max-h-left-leftBLACK.png)
-    2. `h.left.left == RED`（兄弟结点是个3结点或4结点）
-        - ![deletion-max-h-left-leftRED.png](deletion-max-h-left-leftRED.png)
-    3.  这一步是为了将红链接向右边的子结点移动(`moveRedRight`)。
-        ```java
-        private Node moveRedRight(Node h) {
-            colorFlip(h);
-            if (isRed(h.left.left)) {
-                h = rotateRight(h);
-                colorFlip(h);
-            }
-            return h;
-        }
-        ```
-
-删除最大的实现
-```java
-public void deleteMax() {
-    root = deleteMax(root);
-    root.color = BLACK;
-}
-private Node deleteMax(Node h) {
-    if (isRed(h.left)) // 这里比删除最小多一步 红链在左侧右旋  以便传递到右侧的子结点中
-        h = rotateRight(h);
-
-    if (h.right == null)
-        return null;
-
-    if (!isRed(h.right) && !isRed(h.right.left))  // 可能向兄弟结点借一个结点
-        h = moveRedRight(h); // 红链接向下传递
-
-    h.left = deleteMax(h.left);
-    //向上修复分解临时4结点 
-    return fixUp(h);
-}
-```
-
-
-删除最大
-![delete](deleteMax23.gif)
+**删除操作的原则**
+1. 删除的当前结点不能是2-node
+2. 如果有必要可以变换成4-node
+3. 从底部删除结点
+4. 向上的fix过程中，消除4-node
 
 #### 3.3.4 随机删除
+
+如果要删除一个结点，把要删除的那个结点和最底部的结点交换，然后就变成删除最底部的结点，
+就可以转换成删除最大结点或者最小结点了。
+所以先讲最大结点和最小结点的删除。
+
+同时这样也把问题简化了，因为删除最大和最小结点的方法已经分析过了。
 
 [双击结点删除](http://inst.eecs.berkeley.edu/~cs61b/fa17/materials/demos/ll-red-black-2_3-demo.html)
 
 1. 在查找路径上进行和删除最小键相同的变换操作，这样可以保证在查找过程中任意的当前结点不是2结点。
 2. 如果被查找的键在树的底部（基于上述变换操作直到树底，结点肯定不是2结点），直接删除。
 3. 如果不在底部，则将找到的结点和其后继结点交换（跟二叉查找树中的删除一样）。
-    - 举例
+    - 举例：如果要删除D结点，可以选择用D结点左子树的最大结点或者右子树的最小结点来替换D的值，然后再删除最大结点或者最小结点就可以了。
     - ![deletion-use-deletemin.png](deletion-use-deletemin.png)
+    - ```java
+        h.key = min(h.right);
+        h.value = get(h.right, h.key);
+        h.right = deleteMin(h.right);
+    ```
 4. 因为当前结点不是必然不是2结点，所以就是在根结点不是2结点的子树中删除最小的键，同样删除之后需要向上回溯并分解临时4结点。
 
 
@@ -910,19 +960,9 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
    /***************************************************************************
-    *  Red-black tree insertion.
+    *  Red-black tree 插入.
     ***************************************************************************/
 
-    /**
-     * Inserts the specified key-value pair into the symbol table, overwriting the old 
-     * value with the new value if the symbol table already contains the specified key.
-     * Deletes the specified key (and its associated value) from this symbol table
-     * if the specified value is {@code null}.
-     *
-     * @param key the key
-     * @param val the value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null");
         if (val == null) {
@@ -954,13 +994,9 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
    /***************************************************************************
-    *  Red-black tree deletion.
+    *  Red-black tree 删除.
     ***************************************************************************/
 
-    /**
-     * Removes the smallest key and associated value from the symbol table.
-     * @throws NoSuchElementException if the symbol table is empty
-     */
     public void deleteMin() {
         if (isEmpty()) throw new NoSuchElementException("BST underflow");
 
@@ -985,11 +1021,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         return balance(h);
     }
 
-
-    /**
-     * Removes the largest key and associated value from the symbol table.
-     * @throws NoSuchElementException if the symbol table is empty
-     */
     public void deleteMax() {
         if (isEmpty()) throw new NoSuchElementException("BST underflow");
 
@@ -1018,13 +1049,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         return balance(h);
     }
 
-    /**
-     * Removes the specified key and its associated value from this symbol table     
-     * (if the key is in this symbol table).    
-     *
-     * @param  key the key
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void delete(Key key) { 
         if (key == null) throw new IllegalArgumentException("argument to delete() is null");
         if (!contains(key)) return;
@@ -1035,24 +1059,19 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 
         root = delete(root, key);
         if (!isEmpty()) root.color = BLACK;
-        // assert check();
     }
 
-    // delete the key-value pair with the given key rooted at h
     private Node delete(Node h, Key key) { 
-        // assert get(h, key) != null;
-
-        if (key.compareTo(h.key) < 0)  {
-            if (!isRed(h.left) && !isRed(h.left.left))
+        if (key.compareTo(h.key) < 0)  { // key在左边
+            if (!isRed(h.left) && !isRed(h.left.left)) // 红链接左移
                 h = moveRedLeft(h);
             h.left = delete(h.left, key);
-        }
-        else {
-            if (isRed(h.left))
+        } else { // key在右边
+            if (isRed(h.left)) // 保证当前的结点一定是红链接
                 h = rotateRight(h);
             if (key.compareTo(h.key) == 0 && (h.right == null))
                 return null;
-            if (!isRed(h.right) && !isRed(h.right.left))
+            if (!isRed(h.right) && !isRed(h.right.left)) // 红链接右移
                 h = moveRedRight(h);
             if (key.compareTo(h.key) == 0) {
                 h.val = get(h.right, min(h.right).key);
@@ -1063,6 +1082,10 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         }
         return balance(h);
     }
+
+   /***************************************************************************
+    *  Red-black tree 操作.
+    ***************************************************************************/
 
     // 右旋 将红色的左链接转换为右链接叫右旋
     private Node rotateRight(Node h) {
@@ -1129,8 +1152,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     // restore red-black tree invariant
     // 该方法由put方法中的最后一部分构成
     private Node balance(Node h) {
-        // assert (h != null);
-
         if (isRed(h.right))                      h = rotateLeft(h);
         if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
         if (isRed(h.left) && isRed(h.right))     flipColors(h);
@@ -1139,6 +1160,9 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         return h;
     }
 
+   /***************************************************************************
+    *  Red-black tree 工具
+    ***************************************************************************/
 
     public int height() { // 树的高度 和二分查找一致
         return height(root);
@@ -1154,7 +1178,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     } 
 
     private Node min(Node x) { 
-        // assert x != null;
         if (x.left == null) return x; 
         else                return min(x.left); 
     } 
@@ -1180,7 +1203,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         if (x == null) return 0; 
         int cmp = key.compareTo(x.key); 
         if      (cmp < 0) return rank(key, x.left); 
-        else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right); // key在右子树中：左子树的size + 1（跟结点）+ key在以右孩子为跟的树中的rank
+        else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right); // key在右子树中：当前结点左子树的size + 1（当前结点）+ key在以右子树为跟的树中的rank
         else              return size(x.left); 
     }
 }
