@@ -1473,28 +1473,127 @@ public class Example {
 }
 ```
 
+一般IDE自动生成的hashCode也类似
+```java
+// BaseView
+@Override
+public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((countInd == null) ? 0 : countInd.hashCode());
+    result = prime * result + ((entityMstrId == null) ? 0 : entityMstrId.hashCode());
+    result = prime * result + ((language == null) ? 0 : language.hashCode());
+    result = prime * result + ((mainLanguageInd == null) ? 0 : mainLanguageInd.hashCode());
+    result = prime * result + ((pagingCount == null) ? 0 : pagingCount.hashCode());
+    result = prime * result + ((pagingNo == null) ? 0 : pagingNo.hashCode());
+    result = prime * result + ((pagingNum == null) ? 0 : pagingNum.hashCode());
+    result = prime * result + ((pagingSortName == null) ? 0 : pagingSortName.hashCode());
+    result = prime * result + ((tableItemSequenceId == null) ? 0 : tableItemSequenceId.hashCode());
+    result = prime * result + ((thirdPartName == null) ? 0 : thirdPartName.hashCode());
+    return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) {
+        return true;
+    }
+    if (obj == null) {
+        return false;
+    }
+    if (!(obj instanceof BaseView)) {
+        return false;
+    }
+    BaseView other = (BaseView) obj;
+    if (countInd == null) {
+        if (other.countInd != null) {
+            return false;
+        }
+    } else if (!countInd.equals(other.countInd)) {
+        return false;
+    }
+    if (entityMstrId == null) {
+        if (other.entityMstrId != null) {
+            return false;
+        }
+    } else if (!entityMstrId.equals(other.entityMstrId)) {
+        return false;
+    }
+    if (language == null) {
+        if (other.language != null) {
+            return false;
+        }
+    } else if (!language.equals(other.language)) {
+        return false;
+    }
+    if (mainLanguageInd == null) {
+        if (other.mainLanguageInd != null) {
+            return false;
+        }
+    } else if (!mainLanguageInd.equals(other.mainLanguageInd)) {
+        return false;
+    }
+    if (pagingCount == null) {
+        if (other.pagingCount != null) {
+            return false;
+        }
+    } else if (!pagingCount.equals(other.pagingCount)) {
+        return false;
+    }
+    if (pagingNo == null) {
+        if (other.pagingNo != null) {
+            return false;
+        }
+    } else if (!pagingNo.equals(other.pagingNo)) {
+        return false;
+    }
+    if (pagingNum == null) {
+        if (other.pagingNum != null) {
+            return false;
+        }
+    } else if (!pagingNum.equals(other.pagingNum)) {
+        return false;
+    }
+    if (pagingSortName == null) {
+        if (other.pagingSortName != null) {
+            return false;
+        }
+    } else if (!pagingSortName.equals(other.pagingSortName)) {
+        return false;
+    }
+    if (tableItemSequenceId == null) {
+        if (other.tableItemSequenceId != null) {
+            return false;
+        }
+    } else if (!tableItemSequenceId.equals(other.tableItemSequenceId)) {
+        return false;
+    }
+    if (thirdPartName == null) {
+        if (other.thirdPartName != null) {
+            return false;
+        }
+    } else if (!thirdPartName.equals(other.thirdPartName)) {
+        return false;
+    }
+    return true;
+}
+
+```
+
 ### 4.2 基于拉链法的散列表
 
 ```java
 public class SeparateChainingHashST<Key, Value> {
     private static final int INIT_CAPACITY = 4;
 
-    private int n;                                // number of key-value pairs
-    private int m;                                // hash table size
-    private SequentialSearchST<Key, Value>[] st;  // array of linked-list symbol tables
+    private int n;                                // 元素个数
+    private int m;                                // 数组size
+    private SequentialSearchST<Key, Value>[] st;  // 参考 1.1.1 链表实现
 
-
-    /**
-     * Initializes an empty symbol table.
-     */
     public SeparateChainingHashST() {
         this(INIT_CAPACITY);
     } 
 
-    /**
-     * Initializes an empty symbol table with {@code m} chains.
-     * @param m the initial number of chains
-     */
     public SeparateChainingHashST(int m) {
         this.m = m;
         st = (SequentialSearchST<Key, Value>[]) new SequentialSearchST[m];
@@ -1502,8 +1601,8 @@ public class SeparateChainingHashST<Key, Value> {
             st[i] = new SequentialSearchST<Key, Value>();
     } 
 
-    // resize the hash table to have the given number of chains,
-    // rehashing all of the keys
+    // 调整数组大小
+    // 重新hash所有键
     private void resize(int chains) {
         SeparateChainingHashST<Key, Value> temp = new SeparateChainingHashST<Key, Value>(chains);
         for (int i = 0; i < m; i++) {
@@ -1516,67 +1615,30 @@ public class SeparateChainingHashST<Key, Value> {
         this.st = temp.st;
     }
 
-    // hash value between 0 and m-1
+    // hash值在 0 到 m-1之间
     private int hash(Key key) {
         return (key.hashCode() & 0x7fffffff) % m;
     } 
 
-    /**
-     * Returns the number of key-value pairs in this symbol table.
-     *
-     * @return the number of key-value pairs in this symbol table
-     */
     public int size() {
         return n;
     } 
 
-    /**
-     * Returns true if this symbol table is empty.
-     *
-     * @return {@code true} if this symbol table is empty;
-     *         {@code false} otherwise
-     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    /**
-     * Returns true if this symbol table contains the specified key.
-     *
-     * @param  key the key
-     * @return {@code true} if this symbol table contains {@code key};
-     *         {@code false} otherwise
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public boolean contains(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to contains() is null");
         return get(key) != null;
-    } 
-
-    /**
-     * Returns the value associated with the specified key in this symbol table.
-     *
-     * @param  key the key
-     * @return the value associated with {@code key} in the symbol table;
-     *         {@code null} if no such value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
+    }
+    // 查
     public Value get(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
-        int i = hash(key);
-        return st[i].get(key);
+        int i = hash(key); // 得到hash值 hashcode
+        return st[i].get(key); // 链表取值 equals
     } 
 
-    /**
-     * Inserts the specified key-value pair into the symbol table, overwriting the old 
-     * value with the new value if the symbol table already contains the specified key.
-     * Deletes the specified key (and its associated value) from this symbol table
-     * if the specified value is {@code null}.
-     *
-     * @param  key the key
-     * @param  val the value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null");
         if (val == null) {
@@ -1584,21 +1646,16 @@ public class SeparateChainingHashST<Key, Value> {
             return;
         }
 
-        // double table size if average length of list >= 10
+        // 扩容两倍 阈值1/10
         if (n >= 10*m) resize(2*m);
 
+        // 扩容后重新插入
         int i = hash(key);
         if (!st[i].contains(key)) n++;
         st[i].put(key, val);
     } 
 
-    /**
-     * Removes the specified key and its associated value from this symbol table     
-     * (if the key is in this symbol table).    
-     *
-     * @param  key the key
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
+    // 删除
     public void delete(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to delete() is null");
 
@@ -1606,39 +1663,9 @@ public class SeparateChainingHashST<Key, Value> {
         if (st[i].contains(key)) n--;
         st[i].delete(key);
 
-        // halve table size if average length of list <= 2
+        // 1/2的阈值  缩小一倍
         if (m > INIT_CAPACITY && n <= 2*m) resize(m/2);
-    } 
-
-    // return keys in symbol table as an Iterable
-    public Iterable<Key> keys() {
-        Queue<Key> queue = new Queue<Key>();
-        for (int i = 0; i < m; i++) {
-            for (Key key : st[i].keys())
-                queue.enqueue(key);
-        }
-        return queue;
-    } 
-
-
-    /**
-     * Unit tests the {@code SeparateChainingHashST} data type.
-     *
-     * @param args the command-line arguments
-     */
-    public static void main(String[] args) { 
-        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<String, Integer>();
-        for (int i = 0; !StdIn.isEmpty(); i++) {
-            String key = StdIn.readString();
-            st.put(key, i);
-        }
-
-        // print keys
-        for (String s : st.keys()) 
-            StdOut.println(s + " " + st.get(s)); 
-
     }
-
 }
 ```
 
@@ -1654,19 +1681,10 @@ public class LinearProbingHashST<Key, Value> {
     private Key[] keys;      // the keys
     private Value[] vals;    // the values
 
-
-    /**
-     * Initializes an empty symbol table.
-     */
     public LinearProbingHashST() {
         this(INIT_CAPACITY);
     }
 
-    /**
-     * Initializes an empty symbol table with the specified initial capacity.
-     *
-     * @param capacity the initial capacity
-     */
     public LinearProbingHashST(int capacity) {
         m = capacity;
         n = 0;
@@ -1674,44 +1692,23 @@ public class LinearProbingHashST<Key, Value> {
         vals = (Value[]) new Object[m];
     }
 
-    /**
-     * Returns the number of key-value pairs in this symbol table.
-     *
-     * @return the number of key-value pairs in this symbol table
-     */
     public int size() {
         return n;
     }
 
-    /**
-     * Returns true if this symbol table is empty.
-     *
-     * @return {@code true} if this symbol table is empty;
-     *         {@code false} otherwise
-     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    /**
-     * Returns true if this symbol table contains the specified key.
-     *
-     * @param  key the key
-     * @return {@code true} if this symbol table contains {@code key};
-     *         {@code false} otherwise
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public boolean contains(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to contains() is null");
         return get(key) != null;
     }
 
-    // hash function for keys - returns value between 0 and M-1
     private int hash(Key key) {
         return (key.hashCode() & 0x7fffffff) % m;
     }
 
-    // resizes the hash table to the given capacity by re-hashing all of the keys
     private void resize(int capacity) {
         LinearProbingHashST<Key, Value> temp = new LinearProbingHashST<Key, Value>(capacity);
         for (int i = 0; i < m; i++) {
@@ -1724,16 +1721,6 @@ public class LinearProbingHashST<Key, Value> {
         m    = temp.m;
     }
 
-    /**
-     * Inserts the specified key-value pair into the symbol table, overwriting the old 
-     * value with the new value if the symbol table already contains the specified key.
-     * Deletes the specified key (and its associated value) from this symbol table
-     * if the specified value is {@code null}.
-     *
-     * @param  key the key
-     * @param  val the value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null");
 
@@ -1742,61 +1729,48 @@ public class LinearProbingHashST<Key, Value> {
             return;
         }
 
-        // double table size if 50% full
+        // 一半满, 加倍
         if (n >= m/2) resize(2*m);
 
         int i;
         for (i = hash(key); keys[i] != null; i = (i + 1) % m) {
-            if (keys[i].equals(key)) {
+            if (keys[i].equals(key)) { // 查找下一个位置(存在的情况)
                 vals[i] = val;
                 return;
             }
         }
+        // 直到为空退出for循环
         keys[i] = key;
         vals[i] = val;
         n++;
     }
 
-    /**
-     * Returns the value associated with the specified key.
-     * @param key the key
-     * @return the value associated with {@code key};
-     *         {@code null} if no such value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public Value get(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
-        for (int i = hash(key); keys[i] != null; i = (i + 1) % m)
+        // 从hash的位置向后找equals的key
+        for (int i = hash(key); keys[i] != null; i = (i + 1) % m) 
             if (keys[i].equals(key))
                 return vals[i];
         return null;
     }
 
-    /**
-     * Removes the specified key and its associated value from this symbol table     
-     * (if the key is in this symbol table).    
-     *
-     * @param  key the key
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void delete(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to delete() is null");
         if (!contains(key)) return;
 
-        // find position i of key
+        // 找到key的真正位置i
         int i = hash(key);
         while (!key.equals(keys[i])) {
             i = (i + 1) % m;
         }
 
-        // delete key and associated value
+        // 删除键值
         keys[i] = null;
         vals[i] = null;
 
-        // rehash all keys in same cluster
         i = (i + 1) % m;
-        while (keys[i] != null) {
-            // delete keys[i] an vals[i] and reinsert
+        while (keys[i] != null) { // 把当前节点后边所有紧跟着的key重新hash
+            // 删除 keys[i] vals[i] 并重新插入
             Key   keyToRehash = keys[i];
             Value valToRehash = vals[i];
             keys[i] = null;
@@ -1808,63 +1782,8 @@ public class LinearProbingHashST<Key, Value> {
 
         n--;
 
-        // halves size of array if it's 12.5% full or less
+        // 缩小一半  小于 1/8
         if (n > 0 && n <= m/8) resize(m/2);
-
-        assert check();
-    }
-
-    /**
-     * Returns all keys in this symbol table as an {@code Iterable}.
-     * To iterate over all of the keys in the symbol table named {@code st},
-     * use the foreach notation: {@code for (Key key : st.keys())}.
-     *
-     * @return all keys in this symbol table
-     */
-    public Iterable<Key> keys() {
-        Queue<Key> queue = new Queue<Key>();
-        for (int i = 0; i < m; i++)
-            if (keys[i] != null) queue.enqueue(keys[i]);
-        return queue;
-    }
-
-    // integrity check - don't check after each put() because
-    // integrity not maintained during a delete()
-    private boolean check() {
-
-        // check that hash table is at most 50% full
-        if (m < 2*n) {
-            System.err.println("Hash table size m = " + m + "; array size n = " + n);
-            return false;
-        }
-
-        // check that each key in table can be found by get()
-        for (int i = 0; i < m; i++) {
-            if (keys[i] == null) continue;
-            else if (get(keys[i]) != vals[i]) {
-                System.err.println("get[" + keys[i] + "] = " + get(keys[i]) + "; vals[i] = " + vals[i]);
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    /**
-     * Unit tests the {@code LinearProbingHashST} data type.
-     *
-     * @param args the command-line arguments
-     */
-    public static void main(String[] args) { 
-        LinearProbingHashST<String, Integer> st = new LinearProbingHashST<String, Integer>();
-        for (int i = 0; !StdIn.isEmpty(); i++) {
-            String key = StdIn.readString();
-            st.put(key, i);
-        }
-
-        // print keys
-        for (String s : st.keys()) 
-            StdOut.println(s + " " + st.get(s)); 
     }
 }
 ```
