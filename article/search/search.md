@@ -1662,7 +1662,8 @@ public class SeparateChainingHashST<Key, Value> {
 删除的话找到了这个键后直接删除是不行的，因为这样会使后边的元素无法查找到。
 因此需要将簇中被删除的键的右侧的所有键重新插入散列表。
 
-键簇
+键簇：如图，显然，短小的簇才能保证较高的效率。随着插入的越来越多，这个要求很难满足。
+
 ![hashmap-array-use-mod.png](hashmap-array-use-mod.png)
 
 #### 4.3.3 实现
