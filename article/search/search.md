@@ -1246,3 +1246,627 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 
 
 ## 4 散列表
+
+> 散列表（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。
+
+一个简单的例子就是查字典，知道某个字的拼音，可以直接对应到相应的位置，显然比直接一页页翻要快。
+
+使用散列查找要解决两个问题。
+1. 使用*散列函数*将被查找的键转化为数组的一个索引，理想情况下，不同的键都能转化为不同的值，当然这是不可能的。
+2. 第二个问题就是*处理碰撞冲突*的过程，
+
+散列表是典型的以空间换时间的例子，如果没有内存限制甚至可以直接将键作为一个索引。
+
+### 4.1 散列函数
+
+将键值转为数组的索引
+
+如果有一个长度为 M 的数组，就需要一个能将任意键转化为数组范围，并均匀分布到索引（[0, M-1]）的散列函数，0 到 M-1 之间的每个数都有相等的可能性。
+
+#### 4.1.1 散列函数
+
+如果是数字，比如电话号码，可以直接使用这个数组。如果是字符串，比如邮箱地址或者人名则需要将其转化为数字。对于常见的数据类型可以直接使用 java 提供的默认实现
+
+1. boolean
+    ```java
+    public static int hashCode(boolean value) {
+        return value ? 1231 : 1237;
+    }
+    ```
+2. int
+    ```java
+    public final class Integer extends Number implements Comparable<Integer> {
+        public static int hashCode(int value) {
+            return value;
+        }
+    }
+    ```
+3. char/byte
+    ```java
+    public static int hashCode(char value) {
+        return (int)value;
+    }
+    ```
+4. double
+    ```java
+    public static int hashCode(double value) {
+        // doubleToLongBits方法返回根据IEEE754浮点“双精度格式”位布局
+        long bits = doubleToLongBits(value); // 转化为64位long (位布局)
+        return (int)(bits ^ (bits >>> 32)); // 前32位和后32位取 异或 --> long的算法
+    }
+    ```
+5. String
+    ```java
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && value.length > 0) {
+            hash = h = isLatin1() ? StringLatin1.hashCode(value)
+                                  : StringUTF16.hashCode(value);
+        }
+        return h;
+    }
+    // StringUTF16.hashCode(value);
+    public static int hashCode(byte[] value) {
+        int h = 0;
+        int length = value.length >> 1;
+        for (int i = 0; i < length; i++) {
+            h = 31 * h + getChar(value, i);
+        }
+        return h;
+    }
+    ```
+
+上边是 java 实现的一些 hash 函数，不过我们需要将算好的索引维持在 0 到 M-1 的范围内，所以还要还要进行散列。
+
+1. 正整数 除留余数法
+    - 对于任意正整数 k ，计算 k 除以 M 的余数。 （`k%M`）
+    - 如果 M 不是素数，可能无法利用键中包含的信息，无法均匀地分布散列值。
+    - 比如是 \(10^k\) ，那么只能用到后 k 位
+2. 浮点数
+    - 将键表示为二进制然后再用除留余数法
+3. 字符串
+    - 字符串中的 char 可以表示为一个非负的16位正整数。
+    - java使用一种叫*Horner*方法的算法，用 N 次乘法、加法和取余来计算一个字符串的散列值
+    - 使用一个较小的素数，保证所有的字符都能发挥作用，比如 31
+        ```java
+        int hash = 0;
+        for (int i = 0; i < s.length(); i++)
+            hash = (R * hash + s.charAt(i)) % M;
+        ```
+4. 组合
+    - 如果 key 的类型有很多种不同的键，可以跟 String 类型一样将其混合起来。
+    - 例子：`Arrays.hashCode(Object a[])`
+        ```java
+        public static int hashCode(Object a[]) {
+            if (a == null)
+                return 0;
+
+            int result = 1;
+            for (Object element : a) // 对每个元素 hash
+                result = 31 * result + (element == null ? 0 : element.hashCode());
+            return result;
+        }
+        ```
+    - 例子2： `Arrays.deepHashCode(Object a[])`
+        ```java
+        public static int deepHashCode(Object a[]) {
+            if (a == null)
+                return 0;
+
+            int result = 1;
+
+            for (Object element : a) {
+                final int elementHash;
+                final Class<?> cl;
+                if (element == null)
+                    elementHash = 0;
+                else if ((cl = element.getClass().getComponentType()) == null)
+                    elementHash = element.hashCode();
+                else if (element instanceof Object[])
+                    elementHash = deepHashCode((Object[]) element);
+                else
+                    elementHash = primitiveArrayHashCode(element, cl);
+
+                result = 31 * result + elementHash;
+            }
+
+            return result;
+        }
+
+        private static int primitiveArrayHashCode(Object a, Class<?> cl) {
+            return
+                (cl == byte.class)    ? hashCode((byte[]) a)    :
+                (cl == int.class)     ? hashCode((int[]) a)     :
+                (cl == long.class)    ? hashCode((long[]) a)    :
+                (cl == char.class)    ? hashCode((char[]) a)    :
+                (cl == short.class)   ? hashCode((short[]) a)   :
+                (cl == boolean.class) ? hashCode((boolean[]) a) :
+                (cl == double.class)  ? hashCode((double[]) a)  :
+                // If new primitive types are ever added, this method must be
+                // expanded or we will fail here with ClassCastException.
+                hashCode((float[]) a);
+        }
+        ```
+
+#### 4.1.2 java 中 hashcode 和 equals
+
+java 中每一种数据类型都有相应的散列函数（从 Object 继承来的）。
+每一种数据类型的`hashCode()`必须和`equals()`方法一致。
+
+1. 对称性：如果x.equals(y)返回是"true"，那么y.equals(x)也应该返回是"true"。
+2. 反射性：x.equals(x)必须返回是"true"。
+3. 类推性：如果x.equals(y)返回是"true"，而且y.equals(z)返回是"true"，那么z.equals(x)也应该返回是"true"。
+4. 一致性：如果x.equals(y)返回是"true"，只要x和y内容一直不变，不管你重复x.equals(y)多少次，返回都是"true"。
+5. 非空性，x.equals(null)，永远返回是"false"；x.equals(和x不同类型的对象)永远返回是"false"。
+
+equals不同两个对象一定不同。
+
+如果两个对象的`hashCode()`相同，这两个对象不一定相同，还需要用 `equals()` 判断。
+
+#### 4.1.3 将`hashCode()`的值转化为一个数组索引
+
+散列值是不能直接拿来用的。用之前还要先做对数组的长度取模运算，得到的余数才能用来访问数组下标。
+所以我们需要的是一个索引而不是一个32位的整数，所以会将默认的 `hashCode()` 方法和除留余数法结合起来产生一个 0 到 M-1 之间的整数
+
+```java
+private int hash(Key x) { 
+    // 0x7fffffff 是32位的要第一位是0 与hashcode 与 是为了屏蔽符号位
+    // 将32位整数变成31位非负整数
+    return (x.hashCode() & 0x7fffffff) % M; 
+}
+```
+
+**java实现**
+
+```java
+static final int hash(Object key) {
+    int h;
+    // 扰动函数
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+
+public V put(K key, V value) {
+    return putVal(hash(key), key, value, false, true);
+}
+
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                boolean evict) {
+    ...
+    if ((p = tab[i = (n - 1) & hash]) == null)
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        // 存在值或者碰撞冲突
+        ...
+    }
+    ...
+}
+```
+
+1. `h ^ (h >>> 16)`
+    - 扰动函数。防止不同hashCode的高位不同但低位相同导致的hash冲突。
+    简单点说，就是为了混合哈希值的高位和地位，增加低位的随机性。并且混合后的值也变相保持了高位的特征。尽量做到任何一位的变化都能对最终得到的结果产生影响。
+    - hashCode右移16位，正好是32bit的一半。与自己本身做异或操作（相同为0，不同为1）。
+2.  `i = (n - 1) & hash`
+    - 相当于之前的取模运算，就是把散列值和数组长度做一个"与"操作
+    - 这也正好解释了为什么HashMap的数组长度要取2的整次幂。因为这样（数组长度-1）正好相当于一个**低位掩码**。“与”操作的结果就是散列值的高位全部归零，只保留低位值，用来做数组下标访问。
+    - 试想一下，如果没有第一步的高低位组合的操作呢？这个时候某些情况下只取最后几位碰撞也会很严重，比如偶数最后一位一定是0。
+
+
+![java-hash](java-hash.jpg)
+
+#### 4.1.4 自定义`hashCode()`方法
+
+```java
+public class Example {
+    ...
+    private final String who;
+    private final Date when;
+    private final double amount;
+    public int hashCode() {
+        int hash = 17;
+        hash = 31 * hash + who.hashCode();
+        hash = 31 * hash + when.hashCode();
+        hash = 31 * hash + ((Double) amount).hashCode();
+        return hash;
+    }
+    ...
+}
+```
+
+### 4.2 基于拉链法的散列表
+
+```java
+public class SeparateChainingHashST<Key, Value> {
+    private static final int INIT_CAPACITY = 4;
+
+    private int n;                                // number of key-value pairs
+    private int m;                                // hash table size
+    private SequentialSearchST<Key, Value>[] st;  // array of linked-list symbol tables
+
+
+    /**
+     * Initializes an empty symbol table.
+     */
+    public SeparateChainingHashST() {
+        this(INIT_CAPACITY);
+    } 
+
+    /**
+     * Initializes an empty symbol table with {@code m} chains.
+     * @param m the initial number of chains
+     */
+    public SeparateChainingHashST(int m) {
+        this.m = m;
+        st = (SequentialSearchST<Key, Value>[]) new SequentialSearchST[m];
+        for (int i = 0; i < m; i++)
+            st[i] = new SequentialSearchST<Key, Value>();
+    } 
+
+    // resize the hash table to have the given number of chains,
+    // rehashing all of the keys
+    private void resize(int chains) {
+        SeparateChainingHashST<Key, Value> temp = new SeparateChainingHashST<Key, Value>(chains);
+        for (int i = 0; i < m; i++) {
+            for (Key key : st[i].keys()) {
+                temp.put(key, st[i].get(key));
+            }
+        }
+        this.m  = temp.m;
+        this.n  = temp.n;
+        this.st = temp.st;
+    }
+
+    // hash value between 0 and m-1
+    private int hash(Key key) {
+        return (key.hashCode() & 0x7fffffff) % m;
+    } 
+
+    /**
+     * Returns the number of key-value pairs in this symbol table.
+     *
+     * @return the number of key-value pairs in this symbol table
+     */
+    public int size() {
+        return n;
+    } 
+
+    /**
+     * Returns true if this symbol table is empty.
+     *
+     * @return {@code true} if this symbol table is empty;
+     *         {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    /**
+     * Returns true if this symbol table contains the specified key.
+     *
+     * @param  key the key
+     * @return {@code true} if this symbol table contains {@code key};
+     *         {@code false} otherwise
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public boolean contains(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to contains() is null");
+        return get(key) != null;
+    } 
+
+    /**
+     * Returns the value associated with the specified key in this symbol table.
+     *
+     * @param  key the key
+     * @return the value associated with {@code key} in the symbol table;
+     *         {@code null} if no such value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to get() is null");
+        int i = hash(key);
+        return st[i].get(key);
+    } 
+
+    /**
+     * Inserts the specified key-value pair into the symbol table, overwriting the old 
+     * value with the new value if the symbol table already contains the specified key.
+     * Deletes the specified key (and its associated value) from this symbol table
+     * if the specified value is {@code null}.
+     *
+     * @param  key the key
+     * @param  val the value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void put(Key key, Value val) {
+        if (key == null) throw new IllegalArgumentException("first argument to put() is null");
+        if (val == null) {
+            delete(key);
+            return;
+        }
+
+        // double table size if average length of list >= 10
+        if (n >= 10*m) resize(2*m);
+
+        int i = hash(key);
+        if (!st[i].contains(key)) n++;
+        st[i].put(key, val);
+    } 
+
+    /**
+     * Removes the specified key and its associated value from this symbol table     
+     * (if the key is in this symbol table).    
+     *
+     * @param  key the key
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void delete(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to delete() is null");
+
+        int i = hash(key);
+        if (st[i].contains(key)) n--;
+        st[i].delete(key);
+
+        // halve table size if average length of list <= 2
+        if (m > INIT_CAPACITY && n <= 2*m) resize(m/2);
+    } 
+
+    // return keys in symbol table as an Iterable
+    public Iterable<Key> keys() {
+        Queue<Key> queue = new Queue<Key>();
+        for (int i = 0; i < m; i++) {
+            for (Key key : st[i].keys())
+                queue.enqueue(key);
+        }
+        return queue;
+    } 
+
+
+    /**
+     * Unit tests the {@code SeparateChainingHashST} data type.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) { 
+        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<String, Integer>();
+        for (int i = 0; !StdIn.isEmpty(); i++) {
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+
+        // print keys
+        for (String s : st.keys()) 
+            StdOut.println(s + " " + st.get(s)); 
+
+    }
+
+}
+```
+
+### 4.3 基于线性探测法的散列表
+
+
+```java
+public class LinearProbingHashST<Key, Value> {
+    private static final int INIT_CAPACITY = 4;
+
+    private int n;           // number of key-value pairs in the symbol table
+    private int m;           // size of linear probing table
+    private Key[] keys;      // the keys
+    private Value[] vals;    // the values
+
+
+    /**
+     * Initializes an empty symbol table.
+     */
+    public LinearProbingHashST() {
+        this(INIT_CAPACITY);
+    }
+
+    /**
+     * Initializes an empty symbol table with the specified initial capacity.
+     *
+     * @param capacity the initial capacity
+     */
+    public LinearProbingHashST(int capacity) {
+        m = capacity;
+        n = 0;
+        keys = (Key[])   new Object[m];
+        vals = (Value[]) new Object[m];
+    }
+
+    /**
+     * Returns the number of key-value pairs in this symbol table.
+     *
+     * @return the number of key-value pairs in this symbol table
+     */
+    public int size() {
+        return n;
+    }
+
+    /**
+     * Returns true if this symbol table is empty.
+     *
+     * @return {@code true} if this symbol table is empty;
+     *         {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    /**
+     * Returns true if this symbol table contains the specified key.
+     *
+     * @param  key the key
+     * @return {@code true} if this symbol table contains {@code key};
+     *         {@code false} otherwise
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public boolean contains(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to contains() is null");
+        return get(key) != null;
+    }
+
+    // hash function for keys - returns value between 0 and M-1
+    private int hash(Key key) {
+        return (key.hashCode() & 0x7fffffff) % m;
+    }
+
+    // resizes the hash table to the given capacity by re-hashing all of the keys
+    private void resize(int capacity) {
+        LinearProbingHashST<Key, Value> temp = new LinearProbingHashST<Key, Value>(capacity);
+        for (int i = 0; i < m; i++) {
+            if (keys[i] != null) {
+                temp.put(keys[i], vals[i]);
+            }
+        }
+        keys = temp.keys;
+        vals = temp.vals;
+        m    = temp.m;
+    }
+
+    /**
+     * Inserts the specified key-value pair into the symbol table, overwriting the old 
+     * value with the new value if the symbol table already contains the specified key.
+     * Deletes the specified key (and its associated value) from this symbol table
+     * if the specified value is {@code null}.
+     *
+     * @param  key the key
+     * @param  val the value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void put(Key key, Value val) {
+        if (key == null) throw new IllegalArgumentException("first argument to put() is null");
+
+        if (val == null) {
+            delete(key);
+            return;
+        }
+
+        // double table size if 50% full
+        if (n >= m/2) resize(2*m);
+
+        int i;
+        for (i = hash(key); keys[i] != null; i = (i + 1) % m) {
+            if (keys[i].equals(key)) {
+                vals[i] = val;
+                return;
+            }
+        }
+        keys[i] = key;
+        vals[i] = val;
+        n++;
+    }
+
+    /**
+     * Returns the value associated with the specified key.
+     * @param key the key
+     * @return the value associated with {@code key};
+     *         {@code null} if no such value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to get() is null");
+        for (int i = hash(key); keys[i] != null; i = (i + 1) % m)
+            if (keys[i].equals(key))
+                return vals[i];
+        return null;
+    }
+
+    /**
+     * Removes the specified key and its associated value from this symbol table     
+     * (if the key is in this symbol table).    
+     *
+     * @param  key the key
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void delete(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to delete() is null");
+        if (!contains(key)) return;
+
+        // find position i of key
+        int i = hash(key);
+        while (!key.equals(keys[i])) {
+            i = (i + 1) % m;
+        }
+
+        // delete key and associated value
+        keys[i] = null;
+        vals[i] = null;
+
+        // rehash all keys in same cluster
+        i = (i + 1) % m;
+        while (keys[i] != null) {
+            // delete keys[i] an vals[i] and reinsert
+            Key   keyToRehash = keys[i];
+            Value valToRehash = vals[i];
+            keys[i] = null;
+            vals[i] = null;
+            n--;
+            put(keyToRehash, valToRehash);
+            i = (i + 1) % m;
+        }
+
+        n--;
+
+        // halves size of array if it's 12.5% full or less
+        if (n > 0 && n <= m/8) resize(m/2);
+
+        assert check();
+    }
+
+    /**
+     * Returns all keys in this symbol table as an {@code Iterable}.
+     * To iterate over all of the keys in the symbol table named {@code st},
+     * use the foreach notation: {@code for (Key key : st.keys())}.
+     *
+     * @return all keys in this symbol table
+     */
+    public Iterable<Key> keys() {
+        Queue<Key> queue = new Queue<Key>();
+        for (int i = 0; i < m; i++)
+            if (keys[i] != null) queue.enqueue(keys[i]);
+        return queue;
+    }
+
+    // integrity check - don't check after each put() because
+    // integrity not maintained during a delete()
+    private boolean check() {
+
+        // check that hash table is at most 50% full
+        if (m < 2*n) {
+            System.err.println("Hash table size m = " + m + "; array size n = " + n);
+            return false;
+        }
+
+        // check that each key in table can be found by get()
+        for (int i = 0; i < m; i++) {
+            if (keys[i] == null) continue;
+            else if (get(keys[i]) != vals[i]) {
+                System.err.println("get[" + keys[i] + "] = " + get(keys[i]) + "; vals[i] = " + vals[i]);
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Unit tests the {@code LinearProbingHashST} data type.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) { 
+        LinearProbingHashST<String, Integer> st = new LinearProbingHashST<String, Integer>();
+        for (int i = 0; !StdIn.isEmpty(); i++) {
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+
+        // print keys
+        for (String s : st.keys()) 
+            StdOut.println(s + " " + st.get(s)); 
+    }
+}
+```
+### 4.4 调整数组大小
+### 4.5 内存使用
