@@ -1474,6 +1474,7 @@ public class Example {
 ```
 
 一般IDE自动生成的hashCode也类似
+
 ```java
 // BaseView
 @Override
@@ -1483,13 +1484,7 @@ public int hashCode() {
     result = prime * result + ((countInd == null) ? 0 : countInd.hashCode());
     result = prime * result + ((entityMstrId == null) ? 0 : entityMstrId.hashCode());
     result = prime * result + ((language == null) ? 0 : language.hashCode());
-    result = prime * result + ((mainLanguageInd == null) ? 0 : mainLanguageInd.hashCode());
-    result = prime * result + ((pagingCount == null) ? 0 : pagingCount.hashCode());
-    result = prime * result + ((pagingNo == null) ? 0 : pagingNo.hashCode());
-    result = prime * result + ((pagingNum == null) ? 0 : pagingNum.hashCode());
-    result = prime * result + ((pagingSortName == null) ? 0 : pagingSortName.hashCode());
-    result = prime * result + ((tableItemSequenceId == null) ? 0 : tableItemSequenceId.hashCode());
-    result = prime * result + ((thirdPartName == null) ? 0 : thirdPartName.hashCode());
+    ...
     return result;
 }
 
@@ -1526,55 +1521,7 @@ public boolean equals(Object obj) {
     } else if (!language.equals(other.language)) {
         return false;
     }
-    if (mainLanguageInd == null) {
-        if (other.mainLanguageInd != null) {
-            return false;
-        }
-    } else if (!mainLanguageInd.equals(other.mainLanguageInd)) {
-        return false;
-    }
-    if (pagingCount == null) {
-        if (other.pagingCount != null) {
-            return false;
-        }
-    } else if (!pagingCount.equals(other.pagingCount)) {
-        return false;
-    }
-    if (pagingNo == null) {
-        if (other.pagingNo != null) {
-            return false;
-        }
-    } else if (!pagingNo.equals(other.pagingNo)) {
-        return false;
-    }
-    if (pagingNum == null) {
-        if (other.pagingNum != null) {
-            return false;
-        }
-    } else if (!pagingNum.equals(other.pagingNum)) {
-        return false;
-    }
-    if (pagingSortName == null) {
-        if (other.pagingSortName != null) {
-            return false;
-        }
-    } else if (!pagingSortName.equals(other.pagingSortName)) {
-        return false;
-    }
-    if (tableItemSequenceId == null) {
-        if (other.tableItemSequenceId != null) {
-            return false;
-        }
-    } else if (!tableItemSequenceId.equals(other.tableItemSequenceId)) {
-        return false;
-    }
-    if (thirdPartName == null) {
-        if (other.thirdPartName != null) {
-            return false;
-        }
-    } else if (!thirdPartName.equals(other.thirdPartName)) {
-        return false;
-    }
+    ...
     return true;
 }
 
@@ -1788,4 +1735,133 @@ public class LinearProbingHashST<Key, Value> {
 }
 ```
 ### 4.4 调整数组大小
+
 ### 4.5 内存使用
+
+### 4.6 java实现
+
+```java
+final Node<K,V> getNode(int hash, Object key) {
+    Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
+    if ((tab = table) != null && (n = tab.length) > 0 &&
+        (first = tab[(n - 1) & hash]) != null) {
+        if (first.hash == hash && // always check first node
+            ((k = first.key) == key || (key != null && key.equals(k))))
+            return first;
+        if ((e = first.next) != null) {
+            if (first instanceof TreeNode) // 红黑树的实现
+                return ((TreeNode<K,V>)first).getTreeNode(hash, key);
+            do { // 链表
+                if (e.hash == hash &&
+                    ((k = e.key) == key || (key != null && key.equals(k))))
+                    return e;
+            } while ((e = e.next) != null);
+        }
+    }
+    return null;
+}
+
+/**
+* Implements Map.put and related methods.
+*
+* @param hash hash for key
+* @param key the key
+* @param value the value to put
+* @param onlyIfAbsent if true, don't change existing value
+* @param evict if false, the table is in creation mode.
+* @return previous value, or null if none
+*/
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                boolean evict) {
+    Node<K,V>[] tab; Node<K,V> p; int n, i;
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;
+    if ((p = tab[i = (n - 1) & hash]) == null)
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        Node<K,V> e; K k;
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            e = p;
+        else if (p instanceof TreeNode) // 树
+            e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+        else {
+            for (int binCount = 0; ; ++binCount) {
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null); // 插到链表
+                    if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st // TREEIFY_THRESHOLD = 8
+                        treeifyBin(tab, hash); // 转为红黑树
+                    break;
+                }
+                if (e.hash == hash &&
+                    ((k = e.key) == key || (key != null && key.equals(k))))
+                    break;
+                p = e;
+            }
+        }
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value;
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        }
+    }
+    ++modCount;
+    if (++size > threshold)
+        resize();
+    afterNodeInsertion(evict);
+    return null;
+}
+/**
+* Implements Map.remove and related methods.
+*
+* @param hash hash for key
+* @param key the key
+* @param value the value to match if matchValue, else ignored
+* @param matchValue if true only remove if value is equal
+* @param movable if false do not move other nodes while removing
+* @return the node, or null if none
+*/
+final Node<K,V> removeNode(int hash, Object key, Object value,
+                            boolean matchValue, boolean movable) {
+    Node<K,V>[] tab; Node<K,V> p; int n, index;
+    if ((tab = table) != null && (n = tab.length) > 0 &&
+        (p = tab[index = (n - 1) & hash]) != null) {
+        Node<K,V> node = null, e; K k; V v;
+        // 找到key
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            node = p;
+        else if ((e = p.next) != null) {
+            if (p instanceof TreeNode)
+                node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
+            else {
+                do {
+                    if (e.hash == hash &&
+                        ((k = e.key) == key ||
+                            (key != null && key.equals(k)))) {
+                        node = e;
+                        break;
+                    }
+                    p = e;
+                } while ((e = e.next) != null);
+            }
+        }
+        if (node != null && (!matchValue || (v = node.value) == value ||
+                                (value != null && value.equals(v)))) {
+            if (node instanceof TreeNode) //红黑树删除
+                ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable); // untreeify
+            else if (node == p) // 链表 头结点指向待删除的下一个节点
+                tab[index] = node.next;
+            else
+                p.next = node.next;
+            ++modCount;
+            --size;
+            afterNodeRemoval(node);
+            return node;
+        }
+    }
+    return null;
+}
+```
