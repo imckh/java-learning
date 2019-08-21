@@ -1527,7 +1527,33 @@ public boolean equals(Object obj) {
 
 ```
 
+#### 4.1.5 软缓存
+
+如果散列值的计算佷耗时，那么我们可以将每个键的散列值缓存起来，即在每个键中使用`hashCode()`的时候用`hash`变量保存它的返回值。 这样，只第一次调用的时候会计算，但是要注意键一定得是不可变的对象，比如 java 中的 String 对象
+
+```java
+public final class String implements java.io.Serializable, Comparable<String>, CharSequence {
+    private final byte[] value;
+    /** Cache the hash code for the string */
+    private int hash; // Default to 0
+}
+```
+
 ### 4.2 基于拉链法的散列表
+
+![Hashing with separate chaining for standard indexing client](Hashing-with-separate-chaining-for-standard-indexing-client.png)
+
+一个散列函数能够将键转化为数组索引。散列算法的第二步是碰撞处理，也就是两个或多个 key 的 hash 相同的情况。一种方法是将大小为 M 的数组中的每个元素都指向一条链表，链表中的每个节点存储了散列值相同的元素。
+
+#### 4.2.1 查找 添加 删除
+
+查找十分简单：
+1. 根据 hash 值找到数组索引，即链表的头结点
+2. 遍历链表找到相同的 key
+
+删除也是找到数组索引位置的链表头结点，然后调用链表的删除
+
+#### 4.2.2 实现
 
 ```java
 public class SeparateChainingHashST<Key, Value> {
@@ -1618,7 +1644,28 @@ public class SeparateChainingHashST<Key, Value> {
 
 ### 4.3 基于线性探测法的散列表
 
+这种方式是用大小为 M 的数组保存 N 个键值对， M > N。
+需要依靠数组中的*空位*解决冲突。基于这种策略的方式统称为*开放地址*散列表。
 
+#### 4.3.1 查找/插入
+
+最简单的方法叫做*线性探测法*：
+> 当发生碰撞时，直接检查散列表中的下一个位置（索引+1），这样线性探测可能出现三种情况：
+1. 命中，该位置的 key 和被查找的 key 相同。
+2. 未命中，该位置没有 key，键空。
+3. 继续查找，该位置的 key 和被查找的 key 不同。
+
+![hashtab-linear-probing-insertion](hashtab-linear-probing-insertion.png)
+
+#### 4.3.2 删除
+
+删除的话找到了这个键后直接删除是不行的，因为这样会使后边的元素无法查找到。
+因此需要将簇中被删除的键的右侧的所有键重新插入散列表。
+
+键簇
+![hashmap-array-use-mod.png](hashmap-array-use-mod.png)
+
+#### 4.3.3 实现
 ```java
 public class LinearProbingHashST<Key, Value> {
     private static final int INIT_CAPACITY = 4;
@@ -1736,9 +1783,15 @@ public class LinearProbingHashST<Key, Value> {
 ```
 ### 4.4 调整数组大小
 
-### 4.5 内存使用
+#### 4.4.1 线性探测法
 
-### 4.6 java实现
+可以使用 *1.2 有序数组* 中的方法来保证散列表的使用率不超过 1/2。
+
+#### 4.4.2 拉链法
+
+拉链法中也是估计所有有效元素和数组大小之间的比例，来保持较短的链表（2 - 8）。
+
+### 4.6 java 中 HashMap 的实现
 
 ```java
 final Node<K,V> getNode(int hash, Object key) {
